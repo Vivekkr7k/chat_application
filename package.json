@@ -1,0 +1,17 @@
+{
+  "name": "attica-chat-app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "backend": "nodemon backend/index.js",
+    "frontend": "cd frontend && npm run dev",
+    "start": "concurrently \"npm run backend\" \"npm run frontend\""
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "react-icons": "^5.2.1",
+    "react-router-dom": "^6.23.1"
+  }
+}
