@@ -5,6 +5,7 @@ import Login from "./components/employee/Login";
 import ChatPage from "./components/employee/ChatPage";
 import AdminRoutes from "./components/admin/AdminRoutes";
 import AdminLogin from "./components/admin/AdminLogin";
+import { Register } from "./components/admin/Register";
 // import AdminRegistration from "./components/admin/AdminRegistration";
 
 const App = () => {
@@ -16,6 +17,8 @@ const App = () => {
             {/* <Route path="/adminRegistration" element={<AdminRegistration/>}/> */}
             <Route element={<AuthRequired/>}>
               <Route path="/chat" element={<ChatPage/>} />
+            <Route path="/register" element={<Register/>} />
+
               <Route element={<AdminRoutes/>}>
                 <Route path="/admin/dashboard" element={<Dashboard/>} />
                 <Route path="/chat" element={<ChatPage/>}/>
