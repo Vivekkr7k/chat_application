@@ -23,6 +23,7 @@ const Login = () => {
       setLoading(false);
       localStorage.setItem('token', response.data.accessToken);
       console.log(response.data.accessToken);
+      localStorage.setItem('EmployeeId', employeeId);
       navigate('/chat');
     } catch (err) {
       setLoading(false);

@@ -1,15 +1,21 @@
 const express = require("express");
 const router = express.Router();
-const {registerEmployee,loginUser} = require("../controllers/employeeRegController");
-// const validateToken = require("../middleware/vaildateTokenHandler");
-// const validateToken = require("../middleware/vaildateTokenHandler");
-// router.use(validateToken);
+const { registerEmployee, loginUser, getAllEmployees, updateEmployee, deleteEmployee, getTotalMemberAccordingToGroup } = require("../controllers/employeeRegController");
 
 // Register
 router.post("/register", registerEmployee);
 
+// Login
+router.post("/login", loginUser);
 
-router.post("/Login", loginUser);
+// Get all employees
+router.get("/", getAllEmployees);
 
+// Update employee details
+router.put("/:employeeId", updateEmployee);
 
-  module.exports = router
+// Delete employee
+router.delete("/:employeeId", deleteEmployee);
+router.get("/getTotalMember" ,getTotalMemberAccordingToGroup)
+
+module.exports = router;
