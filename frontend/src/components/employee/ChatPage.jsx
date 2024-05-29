@@ -138,20 +138,6 @@ const ChatPage = () => {
     }
   };
 
-  const handleOptionsClick = (index) => {
-    setShowOptions(showOptions === index ? null : index);
-  };
-
-  const handleCopyMessage = (text) => {
-    navigator.clipboard.writeText(text);
-    setShowOptions(null);
-  };
-
-  const handleDeleteMessage = (index) => {
-    setMessages(messages.filter((_, i) => i !== index));
-    setShowOptions(null);
-  };
-
   return (
     <div className="relative h-screen">
       <div className={`flex flex-col h-full ${notifications.length > 0 ? 'blur-sm' : ''}`}>
@@ -227,4 +213,5 @@ const ChatPage = () => {
     </div>
   );
 };
+
 export default ChatPage;

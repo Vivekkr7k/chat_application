@@ -1,17 +1,11 @@
-import Sidebar from "./Sidebar";
-import Groups from "./Groups";
-import Chat from "./Chat";
+import Sidebar from "./Sidebar"
 
 const Dashboard = () => {
   return (
     <>
-      <div className="flex">
-        <Sidebar />
-        <Groups />
-        <Chat />
-      </div>
+      <Sidebar/>
     </>
-  );
-};
+  )
+}
 
-export default Dashboard;
+export default Dashboard
