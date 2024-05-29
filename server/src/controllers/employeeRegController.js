@@ -2,6 +2,7 @@ const asyncHandler = require("express-async-handler");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const EmployeReg = require("../model/employeeRegModel");
+const { json } = require("express");
 
 const registerEmployee = asyncHandler(async (req, res) => {
   const { name, password, confirmPassword, employeeId, state, language, grade, group } = req.body;
@@ -103,5 +104,36 @@ const deleteEmployee = asyncHandler(async (req, res) => {
 
   res.status(200).json({ message: "Employee deleted successfully" });
 });
+const getTotalMemberAccordingToGroup=asyncHandler(async(req,res)=>{
+  try {
+    const data= await EmployeReg.aggregate([
+      {
+        $match: {
+          grade: { $in: ['A', 'B', 'C'] },
+          group: { $in: ["Karnataka Team", "Andhra Pradesh Team", "Tamil Nadu Team", "Kerla Team", "Pondicherry Team"] }
+        }
+      },
+      {
+        $group: {
+          _id: { group: "$group", grade: "$grade" },
+          totalMembers: { $sum: 1 }
+        }
+      },
+      {
+        $project: {
+          _id: 0,
+          group: "$_id.group",
+          grade: "$_id.grade",
+          totalMembers: 1
+        }
+      }
+    ])
+    res.status(201).json(data)
+  } catch (error) {
+    console.error("Error to finding all data ", error);
+      res.status(500).json({ error: "Not fetching the all data " });
+  }
+})
 
-module.exports = { registerEmployee, loginUser, getAllEmployees, updateEmployee, deleteEmployee };
+
+module.exports = { registerEmployee, loginUser, getAllEmployees, updateEmployee, deleteEmployee ,getTotalMemberAccordingToGroup };
