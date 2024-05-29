@@ -209,21 +209,26 @@ app.get('/api/Emessages', async (req, res) => {
 });
 app.get('/api/messages/last-24-hours', async (req, res) => {
     try {
-        const last24Hours = new Date();
-        last24Hours.setHours(last24Hours.getHours() - 24);
-
-        const messages = await liveChat.aggregate([
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        
+        const pipeline = [
             {
                 $match: {
-                    createdAt: { $gte: last24Hours }
+                    createdAt: {
+                        $gte: today,
+                        $lt: new Date(today.getTime() + 24 * 60 * 60 * 1000)
+                    }
                 }
             }
-        ]);
+        ];
 
+        const messages = await liveChat.aggregate(pipeline);
+        
         res.status(200).json(messages);
     } catch (error) {
         console.error('Error retrieving messages:', error);
-        res.status(500).json({ error: 'Internal server error' });
+        res.status(500).json({ error: 'Error to getting the todays data from lib=veChats' });
     }
 });
 

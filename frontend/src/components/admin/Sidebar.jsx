@@ -3,6 +3,7 @@ import { BsChatSquareDots } from "react-icons/bs";
 import { MdGroups } from "react-icons/md";
 import { RiContactsLine } from "react-icons/ri";
 import { BiLogOut } from "react-icons/bi";
+import { SiLivechat } from "react-icons/si";
 import logo from "../../assests/logo.png";
 import { useNavigate } from 'react-router-dom';
 
@@ -20,6 +21,9 @@ const Sidebar = () => {
   const handleLogout=()=>{
     navigate("/")
     localStorage.clear();
+  }
+  const handleLiveChat=()=>{
+    navigate("/livemesages")
   }
 
 
@@ -52,6 +56,12 @@ const Sidebar = () => {
           <RiContactsLine />
           <span className="absolute left-full ml-2 whitespace-nowrap bg-black text-white text-sm rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
             Contacts
+          </span>
+        </div>
+        <div onClick={handleLiveChat} className="group relative flex items-center">
+        <SiLivechat />
+          <span className="absolute left-full ml-2 whitespace-nowrap bg-black text-white text-sm rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            Live Chat
           </span>
         </div>
       </div>

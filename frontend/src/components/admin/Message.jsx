@@ -8,7 +8,6 @@ const Message = ({ selectedGroupName, selectedGrade }) => {
   const [notification, setNotification] = useState(null);
   const messagesEndRef = useRef(null);
   const adminId = localStorage.getItem("AdminId");
-console.log(selectedGroupName, selectedGrade);
   useEffect(() => {
     fetchMessages();
   }, [selectedGroupName, selectedGrade]);
