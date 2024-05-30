@@ -27,7 +27,7 @@ const employeeRegSchema = mongoose.Schema(
             },
             state:{
                 type: String,
-               enum:["Karnataka","Andhra Pradesh", "Tamil Nadu","Kerla","Pondicherry"] ,
+               enum:["Karnataka","Andhra Pradesh", "Tamil Nadu","Kerala","Pondicherry"] ,
                default:"Karnataka"              
               },
               language :{

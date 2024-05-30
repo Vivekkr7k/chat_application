@@ -8,6 +8,7 @@ import AdminLogin from "./components/admin/AdminLogin";
 import { Register } from "./components/admin/Register";
 import FirstPage from "./components/FirstPage";
 import Groups from "./components/admin/Pages/Groups";
+import LiveChatMessages from "./components/admin/Pages/LiveChatMessages";
 import Message from "./components/admin/Message";
 // import AdminRegistration from "./components/admin/AdminRegistration";
 
@@ -27,6 +28,7 @@ const App = () => {
                 <Route path="/admin/dashboard" element={<Dashboard/>} />
                 <Route path="/chat" element={<ChatPage/>}/>
                 <Route path="/Groups" element={<Groups/>}/>
+                <Route path="/livemesages" element={<LiveChatMessages/>}/>
                 <Route path="/message/:selectedGroupName/:selectedGrade" element={<Message />} />
               </Route>
             </Route>

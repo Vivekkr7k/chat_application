@@ -159,7 +159,7 @@ const Message = ({ selectedGroupName: propsGroupName, selectedGrade: propsGrade 
                         <span> : </span>
                       </p>
                       <p className="text-sm">
-                        {msg.message}
+                        {/* {msg.message} */}
                       </p>
                       <p className="text-sm text-black">{msg.message}</p>
                       {msg.Document && (

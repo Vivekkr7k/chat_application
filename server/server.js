@@ -6,7 +6,7 @@ const mongoose = require("mongoose");
 const multer = require("multer"); // Import multer for handling file uploads
 const EmployeeRegistration = require("../server/src/model/employeeRegModel");
 const { uploadOnCloudinary } = require("../server/src/utils/cloudinary.js");
-
+const liveChat = require("./src/model/liveChatModel.js")
 
 
 connectDb(); // Call the function to connect to the database
@@ -29,7 +29,7 @@ const chatSchema = new mongoose.Schema({
       message: String,
       Image: String,
       Document: String,
-      video: String
+      video: String,
     },
   ], // Array containing employeeId, message, Image, and Document
 });
@@ -55,78 +55,99 @@ const upload = multer({ storage: storage });
 
 // API endpoint to send a new message with image and document uploads
 // API endpoint to send a new message with optional image and document uploads
-app.post("/api/messages", upload.fields([{ name: 'image' }, { name: 'document' },{name:'video'}]), async (req, res) => {
-    try {
-        const { employeeId, message, group, grade } = req.body;
+app.post("/api/messages", upload.fields([{ name: 'image' }, { name: 'document' }, { name: 'video' }]), async (req, res) => {
+  try {
+      const { employeeId, message, group, grade } = req.body;
 
-        // Find the chat room by group name and grade
-        let chatRoom = await ChatModel.findOne({ group, grade });
+      // Find the chat room by group name and grade
+      let chatRoom = await ChatModel.findOne({ group, grade });
 
-        if (!chatRoom) {
-            return res.status(400).json({
-                error: `Chat room with group "${group}" and grade "${grade}" does not exist`,
-            });
-        }
+      if (!chatRoom) {
+          return res.status(400).json({
+              error: `Chat room with group "${group}" and grade "${grade}" does not exist`,
+          });
+      }
 
-        // Check if image and document files are provided
-        const hasImage = req.files && req.files.image;
-        const hasDocument = req.files && req.files.document;
-        const hasVideo = req.files && req.files.video;
+      // Check if image, document, and video files are provided
+      const hasImage = req.files && req.files.image;
+      const hasDocument = req.files && req.files.document;
+      const hasVideo = req.files && req.files.video;
 
-        let imageUploadResult;
-        if (hasImage) {
-            const imageLocalPath = req.files.image[0].path;
-            imageUploadResult = await uploadOnCloudinary(imageLocalPath);
-            if (!imageUploadResult || !imageUploadResult.url) {
-                console.error("Image upload failed:", imageUploadResult.error || "Unknown error");
-                return res.status(400).json({ error: "Image upload failed. Please try again." });
-            }
-        }
+      let imageUploadResult;
+      if (hasImage) {
+          const imageLocalPath = req.files.image[0].path;
+          imageUploadResult = await uploadOnCloudinary(imageLocalPath);
+          if (!imageUploadResult || !imageUploadResult.url) {
+              console.error("Image upload failed:", imageUploadResult?.error || "Unknown error");
+              return res.status(400).json({ error: "Image upload failed. Please try again." });
+          }
+      }
 
-        let documentUploadResult;
-        if (hasDocument) {
-            const documentLocalPath = req.files.document[0].path;
-            documentUploadResult = await uploadOnCloudinary(documentLocalPath);
-            if (!documentUploadResult || !documentUploadResult.url) {
-                console.error("Document upload failed:", documentUploadResult.error || "Unknown error");
-                return res.status(400).json({ error: "Document upload failed. Please try again." });
-            }
-        }
-        let videoUploadResult;
-        if (hasVideo) {
-            const videoLocalPath = req.files.video[0].path;
-            videoUploadResult = await uploadOnCloudinary(videoLocalPath);
-            if (!videoUploadResult || !videoUploadResult.url) {
-                console.error("video upload failed:", videoUploadResult.error || "Unknown error");
-                return res.status(400).json({ error: "video upload failed. Please try again." });
-            }
-        }
+      let documentUploadResult;
+      if (hasDocument) {
+          const documentLocalPath = req.files.document[0].path;
+          documentUploadResult = await uploadOnCloudinary(documentLocalPath);
+          if (!documentUploadResult || !documentUploadResult.url) {
+              console.error("Document upload failed:", documentUploadResult?.error || "Unknown error");
+              return res.status(400).json({ error: "Document upload failed. Please try again." });
+          }
+      }
 
-        // Add the new message to the chat room
-        const messageData = { employeeId, message };
-        if (hasImage) {
-            messageData.Image = imageUploadResult.url;
-        }
-        if (hasDocument) {
-            messageData.Document = documentUploadResult.url;
-        }
-        if (hasVideo) {
+      let videoUploadResult;
+      if (hasVideo) {
+          const videoLocalPath = req.files.video[0].path;
+          videoUploadResult = await uploadOnCloudinary(videoLocalPath);
+          if (!videoUploadResult || !videoUploadResult.url) {
+              console.error("Video upload failed:", videoUploadResult?.error || "Unknown error");
+              return res.status(400).json({ error: "Video upload failed. Please try again." });
+          }
+      }
+
+      // console.log("11222222222221vidourl:",videoUploadResult.url);
+
+      // Add the new message to the chat room
+      const messageData = { employeeId, message };
+      if (hasImage) {
+          messageData.Image = imageUploadResult.url;
+      }
+      //  console.log(messageData.Image);
+      //  console.log(hasImage)
+      const imageUrl=messageData.Image
+      if (hasDocument) {
+          messageData.Document = documentUploadResult.url;
+      }
+      const documentUrl=messageData.Document
+      if (hasVideo) {
           messageData.video = videoUploadResult.url;
       }
-        chatRoom.messages.push(messageData);
+      const videoUrl=messageData.video
+      // console.log(videoUrl);
+      chatRoom.messages.push(messageData);
 
-        // Save the updated chat room
-        await chatRoom.save();
+      const liveChats = new liveChat({
+          group: chatRoom.group,
+          grade: chatRoom.grade,
+          employeeId: employeeId,
+          messages: message,
+          image: imageUrl,
+          video: videoUrl ,
+          document: documentUrl,
+      });
+      // console.log(liveChats);
+      await liveChats.save();
 
-        res.status(201).json({ message: "Message sent successfully" });
-    } catch (error) {
-        console.error("Error sending message:", error);
-        res.status(500).json({ error: "Internal server error" });
-    }
+      // Save the updated chat room
+      await chatRoom.save();
+      // console.log(chatRoom);
+
+      res.status(201).json({ message: "Message sent successfully" });
+  } catch (error) {
+      console.error("Error sending message:", error);
+      res.status(500).json({ error: "Internal server error" });
+  }
 });
 
 
-// Create Mongoose Model based on the schema
 
 
 // API endpoint to fetch chat messages for a specific group
@@ -348,6 +369,37 @@ app.get("/api/Emessages", async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 });
+app.get('/api/messages/last-24-hours', async (req, res) => {
+    try {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        
+        const pipeline = [
+            {
+                $match: {
+                    createdAt: {
+                        $gte: today,
+                        $lt: new Date(today.getTime() + 24 * 60 * 60 * 1000)
+                    }
+                }
+            }
+        ];
+
+        const messages = await liveChat.aggregate(pipeline);
+        
+        res.status(200).json(messages);
+    } catch (error) {
+        console.error('Error retrieving messages:', error);
+        res.status(500).json({ error: 'Error to getting the todays data from lib=veChats' });
+    }
+});
+
+
+
+
+
+
+
 
 // Mounting routes for admin and employee registration
 app.use("/api/adminRegistration", require("./src/routes/adminRegRoutes"));

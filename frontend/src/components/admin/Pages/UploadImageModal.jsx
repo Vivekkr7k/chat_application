@@ -20,7 +20,7 @@ export default function UploadImageModal({ selectedGroupName, selectedGrade }) {
   const videoInputRef = React.useRef(null);
   console.log(selectedGroupName, selectedGrade);
 
-  const employeeId = localStorage.getItem("EmployeeId");
+  const adminId = localStorage.getItem("AdminId");
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
   };
@@ -64,7 +64,8 @@ export default function UploadImageModal({ selectedGroupName, selectedGrade }) {
       formData.append(fieldName, file); // Use fieldName as the field name
       formData.append('group', selectedGroupName);
       formData.append('grade', selectedGrade);
-      formData.append('employeeId', employeeId);
+      formData.append('employeeId', adminId); // Add adminId to the FormData object
+      
 
       setLoading(true); // Set loading to true before upload starts
       try {
@@ -157,7 +158,7 @@ export default function UploadImageModal({ selectedGroupName, selectedGrade }) {
         />
       </div>
 
-      {loading && <CircularProgress className='absolute top-1/2 left-1/2' />} {/* Show spinner when loading is true */}
+      {loading && <CircularProgress className='absolute -top-96 left-1/2' />} {/* Show spinner when loading is true */}
     </Stack>
   );
 }

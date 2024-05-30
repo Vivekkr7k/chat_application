@@ -17,6 +17,18 @@ const liveChatSchema=mongoose.Schema({
         type:"String",
         default:''
     },
+    image:{
+        type:"String",
+        default:''
+    },
+    video:{
+        type:"String",
+        default:''
+    },
+    document:{
+        type:"String",
+        default:''
+    }
 },{
     timestamps:true
 })
