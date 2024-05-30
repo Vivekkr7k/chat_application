@@ -3,6 +3,8 @@ import { FaDotCircle } from "react-icons/fa";
 import { IoMdSend } from "react-icons/io";
 import { BiLogOut } from "react-icons/bi";
 import { useNavigate } from 'react-router-dom';
+import { IoMdDocument } from "react-icons/io";
+import UploadImageModal from '../admin/Pages/UploadImageModal';
 
 const ChatPage = () => {
   const [inputValue, setInputValue] = useState('');
@@ -160,14 +162,34 @@ const ChatPage = () => {
               className={`flex ${message.employeeId === localStorage.getItem("EmployeeId") ? 'justify-end' : 'justify-start'} mt-4 mx-4`}
             >
               <div className={`max-w-xs p-3 rounded-md ${message.employeeId === localStorage.getItem("EmployeeId") ? 'bg-gray-200' : 'bg-indigo-500 text-white'}`}>
-                <p>{message.message}</p>
+
                 <div className='flex gap-2 text-xs mt-2'>
                   <p>{message.time}</p>
                 </div>
-                <div className='flex gap-2 text-xs mt-2'>
+                <div className='flex gap-2 text-xs my-2'>
                   <p>Employee ID: {message.employeeId}</p>
                 </div>
+                {message.Document && (
+                  <div className='text-8xl my-2'>
+                    <a href={message.Document} download target="_blank" rel="noopener noreferrer">
+                      <IoMdDocument />
+                    </a>
+                  </div>
+                )}
+                 {message.video && (
+                  <div className='text-8xl my-2'>
+                    <video src={message.video} controls >
+                    </video>
+                  </div>
+                )}
+
+                <div>
+                  <img src={message.Image} alt="" className='rounded-lg' />
+                </div>
+
+                <p className='mt-2'>{message.message}</p>
               </div>
+
             </div>
           ))}
           <div ref={messagesEndRef} />
@@ -186,6 +208,7 @@ const ChatPage = () => {
               <IoMdSend />
             </button>
           </div>
+          <UploadImageModal selectedGroupName={teamName} selectedGrade={grade}  />
         </div>
       </div>
 
@@ -194,8 +217,8 @@ const ChatPage = () => {
       )}
 
       {notifications.map((notification, index) => (
-        <div 
-          key={index} 
+        <div
+          key={index}
           className={`fixed p-12 px-16 text-2xl rounded-lg shadow-lg z-50 transition-transform transform ${index % 2 === 0 ? 'left-1/4' : 'right-1/4'} bg-green-500 text-white`}
           style={{ top: `${index * 120 + 60}px`, width: '300px' }} // Add dynamic spacing between notifications
         >
