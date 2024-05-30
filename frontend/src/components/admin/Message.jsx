@@ -1,5 +1,6 @@
 import  { useState, useEffect, useRef } from "react";
 import axios from "axios";
+import { IoMdSend } from "react-icons/io";
 import { IoMdDocument } from "react-icons/io";
 import UploadImageModal from "./Pages/UploadImageModal";
 
@@ -11,6 +12,7 @@ const Message = ({ selectedGroupName, selectedGrade }) => {
   const [notification, setNotification] = useState(null);
   const messagesEndRef = useRef(null);
   const adminId = localStorage.getItem("AdminId");
+
   useEffect(() => {
     fetchMessages();
   }, [selectedGroupName, selectedGrade]);
@@ -123,8 +125,8 @@ const Message = ({ selectedGroupName, selectedGrade }) => {
           )}
 
           {selectedGroupName && selectedGrade && (
-            <div className="flex flex-col flex-1">
-              <div className="bg-black text-white p-4 flex gap-2">
+            <div className="flex flex-col flex-1 bg-[#f6f5fb]">
+              <div className="bg-[#ffffff] text-[#5443c3] text-2xl p-4 flex gap-2">
                 <h1>{selectedGroupName}</h1>
                 <p>(Grade: {selectedGrade})</p>
               </div>
@@ -141,13 +143,18 @@ const Message = ({ selectedGroupName, selectedGrade }) => {
                     } mb-2`}
                   >
                     <div
-                      className={`bg-${
-                        msg.employeeId === adminId ? "white" : "green"
-                      }-500 text-white py-2 px-4 rounded-lg max-w-md`}
+                      className={`${
+                        msg.employeeId === adminId ? "bg-[#5443c3] text-white rounded-tr-3xl rounded-bl-3xl" : "bg-[#ffffff] text-[#5443c3] rounded-tl-3xl rounded-br-3xl"
+                      } py-2 px-4 rounded-lg max-w-md`}
                     >
-                      <p className="text-sm text-red-500 font-bold">
+                      <p className={`text-sm font-bold ${
+                        msg.employeeId === adminId ? "text-green" : "text-purple-800"
+                      }`}>
                         {msg.employeeId}
                         <span> : </span>
+                      </p>
+                      <p className="text-sm">
+                        {/* {msg.message} */}
                       </p>
                       <p className="text-sm text-black">{msg.message}</p>
                       {msg.Document && (
@@ -176,19 +183,19 @@ const Message = ({ selectedGroupName, selectedGrade }) => {
           )}
         </div>
 
-        <div className="mx-auto flex items-center p-4 sticky bottom-0 z-10 bg-white w-full">
+        <div className="mx-auto flex items-center p-4 sticky bottom-0 z-10 bg-[#f6f5fb] w-full shadow-purple-800">
           <input
             type="text"
-            className="flex-1 py-2 px-4 rounded-l-lg border-t border-b border-l text-gray-800 border-gray-200 bg-white w-full focus:outline-none"
+            className="flex-1 py-2 px-4 rounded-l-lg border-t border-b border-l text-gray-800 border-gray-200 bg-white w-full focus:outline-none placeholder-[#5443c3]" 
             placeholder="Type your message..."
             value={message}
             onChange={(e) => setMessage(e.target.value)}
           />
           <button
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2  rounded-r-lg"
+            className="bg-[#5443c3] hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-r-lg"
             onClick={sendMessage}
           >
-            Send
+            <IoMdSend />
           </button>
          <UploadImageModal selectedGroupName={selectedGroupName} selectedGrade={selectedGrade}  />
         </div>
