@@ -1,12 +1,9 @@
 import  { useState, useEffect, useRef } from "react";
 import axios from "axios";
-<<<<<<< HEAD
 import { IoMdSend } from "react-icons/io";
-=======
 import { IoMdDocument } from "react-icons/io";
 import UploadImageModal from "./Pages/UploadImageModal";
 
->>>>>>> 53d8769b449293d929c30e996788299e2f01d6e0
 
 const Message = ({ selectedGroupName, selectedGrade }) => {
   const [message, setMessage] = useState("");
@@ -156,11 +153,9 @@ const Message = ({ selectedGroupName, selectedGrade }) => {
                         {msg.employeeId}
                         <span> : </span>
                       </p>
-<<<<<<< HEAD
                       <p className="text-sm">
                         {msg.message}
                       </p>
-=======
                       <p className="text-sm text-black">{msg.message}</p>
                       {msg.Document && (
                   <div className='text-8xl my-2'>
@@ -179,7 +174,6 @@ const Message = ({ selectedGroupName, selectedGrade }) => {
                 <div>
                   <img src={msg.Image} alt="" className='rounded-lg' />
                 </div>
->>>>>>> 53d8769b449293d929c30e996788299e2f01d6e0
                     </div>
                   </div>
                 ))}
@@ -198,11 +192,7 @@ const Message = ({ selectedGroupName, selectedGrade }) => {
             onChange={(e) => setMessage(e.target.value)}
           />
           <button
-<<<<<<< HEAD
             className="bg-[#5443c3] hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-r-lg"
-=======
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2  rounded-r-lg"
->>>>>>> 53d8769b449293d929c30e996788299e2f01d6e0
             onClick={sendMessage}
           >
             <IoMdSend />
