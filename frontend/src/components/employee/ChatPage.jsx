@@ -16,6 +16,7 @@ const ChatPage = () => {
   const messagesEndRef = useRef(null);
 
   const navigate = useNavigate();
+  // console.log(messages)
 
   useEffect(() => {
     fetchEmployeeDetails();
@@ -153,6 +154,7 @@ const ChatPage = () => {
               <div className={`max-w-xs p-3 rounded-md ${message.employeeId === localStorage.getItem("EmployeeId") ? 'bg-gray-200' : 'bg-indigo-500 text-white'}`}>
                 <div className='flex gap-2 text-xs mt-2'>
                   <p>{message.time}</p>
+                  
                 </div>
                 <div className='flex gap-2 text-xs my-2'>
                   {
@@ -161,6 +163,7 @@ const ChatPage = () => {
                       : (<p>EmployeeID: {message.employeeId}</p>)
                   }
                 </div>
+                
                 {message.Document && (
                   <div className='text-8xl my-2'>
                     <a href={message.Document} download target="_blank" rel="noopener noreferrer">

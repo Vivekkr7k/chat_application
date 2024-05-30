@@ -35,12 +35,12 @@ const Sidebar = () => {
       </div>
       
       <div className="flex flex-row lg:flex-col gap-[10px] sm:gap-[10px] md:gap-[10px] lg:gap-[40px] relative">
-        <div className="group relative flex items-center bg-[#fffefd] rounded-full p-3 md:p-5">
+        {/* <div className="group relative flex items-center bg-[#fffefd] rounded-full p-3 md:p-5">
           <CgProfile />
           <span className="absolute bottom-full lg:bottom-auto lg:left-full ml-2 lg:ml-0 lg:mt-2 whitespace-nowrap bg-white text-black text-xs md:text-sm rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
             Profile
           </span>
-        </div>
+        </div> */}
         <div onClick={handleGroup} className="group relative flex items-center bg-[#fffefd] rounded-full p-3 md:p-5">
           <BsChatSquareDots />
           <span className="absolute bottom-full lg:bottom-auto lg:left-full ml-2 lg:ml-0 lg:mt-2 whitespace-nowrap bg-white text-black text-xs md:text-sm rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
@@ -53,12 +53,12 @@ const Sidebar = () => {
             Register Employee
           </span>
         </div>
-        <div className="group relative flex items-center bg-[#fffefd] rounded-full p-3 md:p-5">
+        {/* <div className="group relative flex items-center bg-[#fffefd] rounded-full p-3 md:p-5">
           <RiContactsLine />
           <span className="absolute bottom-full lg:bottom-auto lg:left-full ml-2 lg:ml-0 lg:mt-2 whitespace-nowrap bg-white text-black text-xs md:text-sm rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
             Contacts
           </span>
-        </div>
+        </div> */}
         <div onClick={handleLiveChat} className="group relative flex items-center bg-[#fffefd] rounded-full p-3 md:p-5">
           <SiLivechat />
           <span className="absolute bottom-full lg:bottom-auto lg:left-full ml-2 lg:ml-0 lg:mt-2 whitespace-nowrap bg-white text-black text-xs md:text-sm rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
