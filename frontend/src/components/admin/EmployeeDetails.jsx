@@ -25,7 +25,7 @@ const Modal = ({ show, onClose, employee, onUpdate }) => {
 
   return (
     <div className="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center">
-      <div className="bg-white p-6 rounded-lg shadow-lg">
+      <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
         <h2 className="text-2xl font-bold mb-4">Edit Employee Details</h2>
         <form>
           <div className="mb-4">
@@ -129,7 +129,7 @@ const EmployeeDetails = () => {
 
   const handleDelete = async (employeeId) => {
     try {
-      alert("Are u sure , the data will be Deleted Permanently")
+      alert("Are you sure? The data will be deleted permanently.");
       await axios.delete(`http://localhost:5001/api/employeeRegistration/${employeeId}`);
       setEmployees(employees.filter(employee => employee.employeeId !== employeeId));
     } catch (error) {
@@ -153,25 +153,25 @@ const EmployeeDetails = () => {
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
             <tr>
-              <th className="py-3 px-6 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-              <th className="py-3 px-6 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Employee ID</th>
-              <th className="py-3 px-6 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">State</th>
-              <th className="py-3 px-6 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Language</th>
-              <th className="py-3 px-6 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Grade</th>
-              <th className="py-3 px-6 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Team Name</th>
-              <th className="py-3 px-6 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+              <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+              <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Employee ID</th>
+              <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">State</th>
+              <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Language</th>
+              <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Grade</th>
+              <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Team Name</th>
+              <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
             {employees.map(employee => (
               <tr key={employee._id}>
-                <td className="py-4 px-6 whitespace-nowrap">{employee.name}</td>
-                <td className="py-4 px-6 whitespace-nowrap">{employee.employeeId}</td>
-                <td className="py-4 px-6 whitespace-nowrap">{employee.state}</td>
-                <td className="py-4 px-6 whitespace-nowrap">{employee.language}</td>
-                <td className="py-4 px-6 whitespace-nowrap">{employee.grade}</td>
-                <td className="py-4 px-6 whitespace-nowrap">{employee.group}</td>
-                <td className="py-4 px-6 whitespace-nowrap">
+                <td className="py-4 px-4 whitespace-nowrap">{employee.name}</td>
+                <td className="py-4 px-4 whitespace-nowrap">{employee.employeeId}</td>
+                <td className="py-4 px-4 whitespace-nowrap">{employee.state}</td>
+                <td className="py-4 px-4 whitespace-nowrap">{employee.language}</td>
+                <td className="py-4 px-4 whitespace-nowrap">{employee.grade}</td>
+                <td className="py-4 px-4 whitespace-nowrap">{employee.group}</td>
+                <td className="py-4 px-4 whitespace-nowrap flex">
                   <button onClick={() => handleEdit(employee)} className="mr-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                     Edit
                   </button>

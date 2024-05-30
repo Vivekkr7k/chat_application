@@ -1,17 +1,22 @@
-import  { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { IoMdSend } from "react-icons/io";
 import { IoMdDocument } from "react-icons/io";
 import UploadImageModal from "./Pages/UploadImageModal";
+import { useParams } from "react-router-dom";
 
-
-const Message = ({ selectedGroupName, selectedGrade }) => {
+const Message = ({ selectedGroupName: propsGroupName, selectedGrade: propsGrade }) => {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
   const [showPrompt, setShowPrompt] = useState(false);
   const [notification, setNotification] = useState(null);
   const messagesEndRef = useRef(null);
   const adminId = localStorage.getItem("AdminId");
+
+  const { selectedGroupName: paramsGroupName, selectedGrade: paramsGrade } = useParams();
+
+  const selectedGroupName = propsGroupName || paramsGroupName;
+  const selectedGrade = propsGrade || paramsGrade;
 
   useEffect(() => {
     fetchMessages();
@@ -115,7 +120,7 @@ const Message = ({ selectedGroupName, selectedGrade }) => {
   }, [messages]);
 
   return (
-    <div className="flex flex-row h-screen w-[70vw]">
+    <div className="flex flex-row h-screen lg:w-[70vw] w-[100vw]">
       <div className="flex-1 flex flex-col w-full">
         <div className="flex flex-col flex-1 overflow-y-auto">
           {showPrompt && (

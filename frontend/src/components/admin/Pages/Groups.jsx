@@ -5,7 +5,7 @@ import GroupsList from '../GroupsList'
 
 const Groups = () => {
   return (
-    <div className='flex'>
+    <div className='lg:flex  block'>
       <Sidebar/>
        <GroupsList/>
       

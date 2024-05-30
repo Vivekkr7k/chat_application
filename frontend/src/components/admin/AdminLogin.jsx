@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import babusir from '../../assests/babusir.png'
+import babusirr from '../../assests/babusirr.png'
 import logo from '../../assests/logo.png'
+import back3 from '../../assests/back3.png' // Keep this import if you need to reference the image path directly elsewhere
 
 import { useNavigate } from 'react-router-dom';
 
@@ -33,10 +34,10 @@ const AdminLogin = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-[#f7f7ff]">
+    <div className="flex items-center justify-center min-h-screen bg-cover bg-center" style={{ backgroundImage: `url(${back3})` }}>
       <div className="flex flex-col lg:flex-row items-center justify-center lg:space-x-6 space-y-6 lg:space-y-0 w-full max-w-5xl">
         <div className="hidden lg:block lg:w-1/2">
-          <img src={babusir} alt="Babusir" className="object-cover h-full w-full" />
+          <img src={babusirr} alt="Babusir" className="object-cover h-full w-full rounded-full" />
         </div>
         <div className="flex flex-col items-center justify-center lg:w-1/2 p-8 bg-white rounded-lg shadow-lg">
           <div className="text-center mb-6">

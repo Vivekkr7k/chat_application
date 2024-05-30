@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Message from './Message';
 import { RiDeleteBinLine } from "react-icons/ri";
 
@@ -9,6 +10,8 @@ const GroupsList = () => {
   const [showModal, setShowModal] = useState(false);
   const [newGroupName, setNewGroupName] = useState("");
   const [grade, setGrade] = useState("A");
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchGroups = async () => {
@@ -31,6 +34,11 @@ const GroupsList = () => {
   const handleGroupClick = (groupName, groupGrade) => {
     setSelectedGroupName(groupName);
     setSelectedGrade(groupGrade);
+
+    // Check screen size and navigate if small screen
+    if (window.innerWidth < 1024) { // Adjust the width as needed for your breakpoint
+      navigate(`/message/${encodeURIComponent(groupName)}/${encodeURIComponent(groupGrade)}`);
+    }
   };
 
   const handleAddGroup = () => {
@@ -101,10 +109,10 @@ const GroupsList = () => {
   };
 
   return (
-    <div className="flex flex-col md:flex-row h-screen">
-      <div className="flex flex-col w-full md:w-[24vw] bg-[#ffffff] text-[#5443c3] border shadow shadow-blue-500/65 ">
+    <div className="flex flex-col lg:flex-row h-screen">
+      <div className="flex flex-col w-full lg:w-[24vw] bg-[#ffffff] text-[#5443c3] border shadow shadow-blue-500/65">
         <div className="p-4 flex justify-between items-center">
-          <h1 className="text-2xl md:text-3xl font-bold">Groups</h1>
+          <h1 className="text-2xl lg:text-3xl font-bold">Groups</h1>
           <button 
             className="bg-[#5443c3] hover:bg-blue-400 text-white font-bold py-2 px-4 rounded"
             onClick={handleAddGroup}
@@ -112,7 +120,7 @@ const GroupsList = () => {
             +
           </button>
         </div>
-        <div className="overflow-y-auto mt-8 ">
+        <div className="overflow-y-auto mt-8">
           {groups.map((group, index) => (
             <div 
               key={index} 
@@ -137,23 +145,15 @@ const GroupsList = () => {
         </div>
       </div>
 
-      <div className="flex-1 md:flex md:flex-col">
-        {selectedGroupName && selectedGrade && (
-          <div className="block md:hidden mt-4">
-            <Message selectedGroupName={selectedGroupName} selectedGrade={selectedGrade} />
-          </div>
-        )}
-      </div>
-
-      <div className="hidden md:flex md:flex-1">
+      <div className="lg:flex-1 hidden lg:block">
         {selectedGroupName && selectedGrade && (
           <Message selectedGroupName={selectedGroupName} selectedGrade={selectedGrade} />
         )}
       </div>
 
       {showModal && (
-        <div className="fixed  inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-4 md:p-8 rounded-lg w-11/12 md:w-auto">
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-4 lg:p-8 rounded-lg w-11/12 lg:w-auto">
             <h2 className="text-2xl font-bold mb-4 text-[#5443c3]">Add Group</h2>
             <input
               type="text"

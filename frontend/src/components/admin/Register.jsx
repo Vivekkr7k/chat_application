@@ -53,7 +53,7 @@ export const Register = () => {
   };
 
   return (
-    <div className="flex">
+    <div className="lg:flex block">
       <Sidebar />
       <div className="flex-1 p-6">
         <div className="flex items-center mb-4 flex-col">
@@ -67,7 +67,7 @@ export const Register = () => {
         </div>
         {isModalOpen && ( 
           <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-            <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 max-w-md w-full">
+            <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 w-full max-w-lg mx-2 sm:mx-4 md:mx-6 lg:mx-auto xl:mx-auto">
               <h2 className="text-2xl font-bold mb-4">Register</h2>
               {error && <div className="text-red-500 mb-4">{error}</div>}
               <form onSubmit={handleSubmit} className="w-full">

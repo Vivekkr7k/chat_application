@@ -143,25 +143,25 @@ const ChatPage = () => {
   return (
     <div className="relative h-screen">
       <div className={`flex flex-col h-full ${notifications.length > 0 ? 'blur-sm' : ''}`}>
-        <div className='h-16 bg-slate-100 flex justify-between items-center px-4 border-b-2 border-gray-300'>
+        <div className='h-16 bg-[#ffffff] flex justify-between items-center px-4 border-b-2 border-gray-300'>
           <div className='flex items-center gap-2'>
-            <h1 className='text-xl'>{localStorage.getItem("EmployeeId")}</h1>
+            <h1 className='text-2xl text-[#5443c3]'>{localStorage.getItem("EmployeeId")}</h1>
             <p><FaDotCircle className='text-green-500 ' /></p>
           </div>
           <div className='flex items-center gap-7 -ml-10 mr-10'>
-            <div onClick={handleLogout} className='text-3xl'>
+            <div onClick={handleLogout} className='text-3xl text-[#5443c3]'>
               <BiLogOut />
             </div>
           </div>
         </div>
 
-        <div className='flex-1 bg-slate-100 border-b-2 border-gray-300 overflow-y-scroll'>
+        <div className='flex-1 bg-[#f6f5fb] border-b-2 border-gray-300 overflow-y-scroll'>
           {Array.isArray(messages) && messages.map((message, index) => (
             <div
               key={index}
               className={`flex ${message.employeeId === localStorage.getItem("EmployeeId") ? 'justify-end' : 'justify-start'} mt-4 mx-4`}
             >
-              <div className={`max-w-xs p-3 rounded-md ${message.employeeId === localStorage.getItem("EmployeeId") ? 'bg-gray-200' : 'bg-indigo-500 text-white'}`}>
+              <div className={`max-w-xs p-3 rounded-md ${message.employeeId === localStorage.getItem("EmployeeId") ? 'bg-[#5443c3] text-white rounded-tl-3xl rounded-bl-3xl  rounded-tr-3xl' : 'bg-white text-[#5443c3] rounded-tl-3xl rounded-br-3xl rounded-tr-3xl'}`}>
 
                 <div className='flex gap-2 text-xs mt-2'>
                   <p>{message.time}</p>
@@ -195,16 +195,16 @@ const ChatPage = () => {
           <div ref={messagesEndRef} />
         </div>
 
-        <div className='bg-slate-100 h-24 flex items-center'>
+        <div className=' bg-[#f6f5fb] h-24 flex items-center  rounded-l-lg border-t border-b border-l text-gray-800   w-full focus:outline-none '>
           <input
             type="text"
             value={inputValue}
             onChange={handleInputChange}
-            placeholder='Type Message'
-            className='w-full h-10 ml-6 bg-gray-300 rounded-md cursor-text pl-4 placeholder-black border-none focus:outline-none '
+            placeholder='Type your Message'
+            className='w-full h-10 ml-6 border-gray-200 bg-white rounded-md cursor-text pl-4 placeholder-[#5443c3] focus:outline-none '
           />
           <div className='flex justify-center items-center gap-4 ml-4'>
-            <button onClick={handleSendClick} className='text-2xl bg-indigo-500 p-3 text-white rounded-md mr-4'>
+            <button onClick={handleSendClick} className='text-2xl bg-[#5443c3] p-3 text-white rounded-md mr-4'>
               <IoMdSend />
             </button>
           </div>
