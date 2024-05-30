@@ -1,26 +1,42 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import Sidebar from "../Sidebar";
+import { IoMdDocument } from "react-icons/io";
 
 const adminId = localStorage.getItem("AdminId");
 
 const LiveChatMessages = () => {
   const [liveChatMessages, setLiveChatMessages] = useState([]);
+  const bottomRef = useRef(null);
 
   useEffect(() => {
+    const fetchLiveChatMessages = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:5001/api/messages/last-24-hours"
+        );
+        setLiveChatMessages(response.data);
+      } catch (error) {
+        console.error("Error fetching live chat messages:", error);
+      }
+    };
+
     fetchLiveChatMessages();
+
+    // Fetch new messages every 10 seconds
+    const interval = setInterval(() => {
+      fetchLiveChatMessages();
+    }, 10000);
+
+    return () => clearInterval(interval); // Clear interval on component unmount
   }, []);
 
-  const fetchLiveChatMessages = async () => {
-    try {
-      const response = await axios.get(
-        "http://localhost:5001/api/messages/last-24-hours"
-      );
-      setLiveChatMessages(response.data);
-    } catch (error) {
-      console.error("Error fetching live chat messages:", error);
+  useEffect(() => {
+    // Scroll to the bottom when messages are updated
+    if (bottomRef.current) {
+      bottomRef.current.scrollIntoView({ behavior: "smooth" });
     }
-  };
+  }, [liveChatMessages]);
 
   return (
     <div className="flex flex-row h-screen">
@@ -49,6 +65,29 @@ const LiveChatMessages = () => {
                     {msg.employeeId}
                     <span> : </span>
                   </p>
+                  {msg.document && (
+                    <div className="text-8xl my-2">
+                      <a
+                        href={msg.document}
+                        download
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <IoMdDocument />
+                      </a>
+                    </div>
+                  )}
+                  {msg.video && (
+                    <div className="text-8xl my-2">
+                      <video src={msg.video} controls></video>
+                    </div>
+                  )}
+
+                  {msg.image && (
+                    <div>
+                      <img src={msg.image} alt="" className="rounded-lg" />
+                    </div>
+                  )}
                   <p className="text-lg">{msg.messages}</p>
                   <p className="text-xs">
                     {new Date(msg.createdAt).toLocaleString()}
@@ -56,6 +95,7 @@ const LiveChatMessages = () => {
                 </div>
               </div>
             ))}
+            <div ref={bottomRef} /> {/* Dummy div to help with scrolling */}
           </div>
         </div>
       </div>

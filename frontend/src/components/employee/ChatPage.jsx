@@ -3,6 +3,8 @@ import { FaDotCircle } from "react-icons/fa";
 import { IoMdSend } from "react-icons/io";
 import { BiLogOut } from "react-icons/bi";
 import { useNavigate } from 'react-router-dom';
+import { IoMdDocument } from "react-icons/io";
+import UploadModel from './UploadModel';
 
 const ChatPage = () => {
   const [inputValue, setInputValue] = useState('');
@@ -31,32 +33,22 @@ const ChatPage = () => {
   const fetchEmployeeDetails = async () => {
     try {
       const employeeId = localStorage.getItem("EmployeeId");
-      console.log("Fetching employee details for ID:", employeeId);
       const response = await fetch(`http://localhost:5001/api/employeeDetails/${employeeId}`);
       if (response.ok) {
         const data = await response.json();
-        console.log(data);
         setEmployeeDetails(data);
         setTeamName(data.group);
         setGrade(data.grade);
-        console.log("Employee Details:", data);
 
-        // Fetch messages based on teamName and grade
         const messagesResponse = await fetch(`http://localhost:5001/api/Emessages?teamName=${data.group}&grade=${data.grade}`);
         if (messagesResponse.ok) {
           const messagesData = await messagesResponse.json();
-          console.log("Messages Data:", messagesData);
           if (Array.isArray(messagesData)) {
-            setMessages(messagesData); // Set messages state with fetched messages
+            setMessages(messagesData);
           } else {
-            console.error('Invalid messages data format:', messagesData);
-            setMessages([]); // Set empty array if data format is invalid
+            setMessages([]);
           }
-        } else {
-          console.error('Failed to fetch messages');
         }
-      } else {
-        console.error('Failed to fetch employee details');
       }
     } catch (error) {
       console.error('Error fetching employee details:', error.message);
@@ -80,7 +72,7 @@ const ChatPage = () => {
             employeeId: employeeId,
             message: inputValue,
             group: teamName,
-            grade: grade // Send the team name as well
+            grade: grade
           })
         });
 
@@ -88,11 +80,11 @@ const ChatPage = () => {
           const newMessage = {
             employeeId: employeeId,
             message: inputValue,
-            time: new Date().toLocaleTimeString(), // Add time property
-            senderType: 'sent' // Indicate this is a sent message
+            time: new Date().toLocaleTimeString(),
+            senderType: 'sent'
           };
-          setMessages(prevMessages => [...prevMessages, newMessage]); // Update messages state to include the new message
-          setInputValue(''); // Clear the input field
+          setMessages(prevMessages => [...prevMessages, newMessage]);
+          setInputValue('');
         } else {
           console.error('Failed to send message');
         }
@@ -126,7 +118,6 @@ const ChatPage = () => {
                 message: msg.message,
                 time: msg.time
               }))];
-              // Limit to the last 5 notifications
               return updatedNotifications.slice(-5);
             });
           }
@@ -160,13 +151,32 @@ const ChatPage = () => {
               className={`flex ${message.employeeId === localStorage.getItem("EmployeeId") ? 'justify-end' : 'justify-start'} mt-4 mx-4`}
             >
               <div className={`max-w-xs p-3 rounded-md ${message.employeeId === localStorage.getItem("EmployeeId") ? 'bg-gray-200' : 'bg-indigo-500 text-white'}`}>
-                <p>{message.message}</p>
                 <div className='flex gap-2 text-xs mt-2'>
                   <p>{message.time}</p>
                 </div>
-                <div className='flex gap-2 text-xs mt-2'>
-                  <p>Employee ID: {message.employeeId}</p>
+                <div className='flex gap-2 text-xs my-2'>
+                  {
+                    message.employeeId.endsWith("@gmail.com")
+                      ? (<p>AdminID: {message.employeeId}</p>)
+                      : (<p>EmployeeID: {message.employeeId}</p>)
+                  }
                 </div>
+                {message.Document && (
+                  <div className='text-8xl my-2'>
+                    <a href={message.Document} download target="_blank" rel="noopener noreferrer">
+                      <IoMdDocument />
+                    </a>
+                  </div>
+                )}
+                {message.video && (
+                  <div className='text-8xl my-2'>
+                    <video src={message.video} controls></video>
+                  </div>
+                )}
+                <div>
+                  <img src={message.Image} alt="" className='rounded-lg' />
+                </div>
+                <p className='mt-2'>{message.message}</p>
               </div>
             </div>
           ))}
@@ -179,13 +189,14 @@ const ChatPage = () => {
             value={inputValue}
             onChange={handleInputChange}
             placeholder='Type Message'
-            className='w-full h-10 ml-6 bg-gray-300 rounded-md cursor-text pl-4 placeholder-black border-none focus:outline-none '
+            className='w-full h-10 ml-6 bg-gray-300 rounded-md cursor-text pl-4 placeholder-black border-none focus:outline-none'
           />
           <div className='flex justify-center items-center gap-4 ml-4'>
             <button onClick={handleSendClick} className='text-2xl bg-indigo-500 p-3 text-white rounded-md mr-4'>
               <IoMdSend />
             </button>
           </div>
+          <UploadModel selectedGroupName={teamName} selectedGrade={grade} />
         </div>
       </div>
 
@@ -194,10 +205,10 @@ const ChatPage = () => {
       )}
 
       {notifications.map((notification, index) => (
-        <div 
-          key={index} 
+        <div
+          key={index}
           className={`fixed p-12 px-16 text-2xl rounded-lg shadow-lg z-50 transition-transform transform ${index % 2 === 0 ? 'left-1/4' : 'right-1/4'} bg-green-500 text-white`}
-          style={{ top: `${index * 120 + 60}px`, width: '300px' }} // Add dynamic spacing between notifications
+          style={{ top: `${index * 120 + 60}px`, width: '300px' }}
         >
           <button
             className="absolute top-2 right-2 text-white hover:text-gray-200"
