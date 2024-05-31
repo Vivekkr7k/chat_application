@@ -13,7 +13,7 @@ const registerEmployee = asyncHandler(async (req, res) => {
 
   // Validate other mandatory fields
   if (!name || !password || !confirmPassword  || !employeeId || !state || !grade || !group) {
-    return res.status(400).json({ error: "All fields are mandatory!" });
+    return res.status(400).json({ error: "All fields are mandatoryyy!" });
   }
 
   // let user_id;
@@ -42,6 +42,7 @@ const registerEmployee = asyncHandler(async (req, res) => {
     group,
    
   });
+  console.log(employeeRegistration);
 
   res.status(201).json({ employeeRegistration });
 });
