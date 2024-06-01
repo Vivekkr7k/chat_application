@@ -201,7 +201,7 @@ const EmployeeDetails = () => {
           onClose={() => setShowModal(false)}
           employee={selectedEmployee}
           onUpdate={handleUpdate}
-        />
+        />  
       )}
     </div>
   );

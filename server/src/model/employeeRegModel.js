@@ -40,8 +40,8 @@ const employeeRegSchema = mongoose.Schema(
               },
               group:{
                 type:String,
-                enum:["Karnataka Team","Andhra Pradesh Team", "Tamil Nadu Team","Kerla Team","Pondicherry Team"] ,
-                // default:"Karnataka Team" 
+                enum:["Karnataka Team","Andhra Pradesh Team", "Tamil Nadu Team","Kerala Team","Pondicherry Team"] ,
+                default:"Karnataka Team" 
               },
               
     },
