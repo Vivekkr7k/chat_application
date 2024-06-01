@@ -153,7 +153,7 @@ const Message = ({ selectedGroupName: propsGroupName, selectedGrade: propsGrade 
                       } py-2 px-4 rounded-lg max-w-md`}
                     >
                       <p className={`text-sm font-bold ${
-                        msg.employeeId === adminId ? "text-green" : "text-purple-800"
+                        msg.employeeId === adminId ? "text-green" : "text-[#5443c3]"
                       }`}>
                         {msg.employeeId}
                         <span> : </span>
@@ -161,7 +161,7 @@ const Message = ({ selectedGroupName: propsGroupName, selectedGrade: propsGrade 
                       <p className="text-sm">
                         {/* {msg.message} */}
                       </p>
-                      <p className="text-sm text-black">{msg.message}</p>
+                      <p className="text-sm">{msg.message}</p>
                       {msg.Document && (
                   <div className='text-8xl my-2'>
                     <a href={msg.Document} download target="_blank" rel="noopener noreferrer">

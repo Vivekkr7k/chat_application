@@ -28,7 +28,7 @@ const FirstPage = () => {
           
           {/* Additional Bubbles for the right section */}
           <div className="absolute bg-purple-700 rounded-full w-12 h-12 sm:w-16 sm:h-16 top-5 sm:top-10 right-5 sm:right-10 opacity-50"></div>
-          <div className="absolute bg-pink-500 rounded-full w-16 h-16 sm:w-24 sm:h-24 bottom-5 sm:bottom-10 left-5 sm:left-10 opacity-50"></div>
+          <div className="absolute bg-pink-500 rounded-full w-16 h-16 sm:w-24 sm:h-24 bottom-5 sm:bottom-1 left-5 sm:left-10 opacity-50"></div>
         </div>
         <div className="w-full lg:w-1/3 p-8 bg-white flex flex-col justify-between">
           <div className="flex justify-center">

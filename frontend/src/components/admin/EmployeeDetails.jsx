@@ -1,5 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { FaEdit } from "react-icons/fa";
+import { RiDeleteBinLine } from "react-icons/ri";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Modal = ({ show, onClose, employee, onUpdate }) => {
   const [formData, setFormData] = useState({ ...employee });
@@ -25,11 +29,12 @@ const Modal = ({ show, onClose, employee, onUpdate }) => {
 
   return (
     <div className="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center">
-      <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
-        <h2 className="text-2xl font-bold mb-4">Edit Employee Details</h2>
+      <div className="bg-[#f7f7ff] p-6 rounded-lg shadow-lg w-full max-w-md">
+        <h2 className="text-2xl font-bold mb-4 text-[#5443c3]">Edit Employee Details</h2>
         <form>
+          {/* Form inputs for employee details */}
           <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2">Name</label>
+            <label className="block text-[#5443c3] text-sm font-bold mb-2">Name</label>
             <input
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700"
               name="name"
@@ -38,7 +43,7 @@ const Modal = ({ show, onClose, employee, onUpdate }) => {
             />
           </div>
           <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2">Employee ID</label>
+            <label className="block text-[#5443c3] text-sm font-bold mb-2">Employee ID</label>
             <input
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700"
               name="employeeId"
@@ -47,7 +52,7 @@ const Modal = ({ show, onClose, employee, onUpdate }) => {
             />
           </div>
           <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2">State</label>
+            <label className="block text-[#5443c3] text-sm font-bold mb-2">State</label>
             <input
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700"
               name="state"
@@ -56,7 +61,7 @@ const Modal = ({ show, onClose, employee, onUpdate }) => {
             />
           </div>
           <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2">Language</label>
+            <label className="block text-[#5443c3] text-sm font-bold mb-2">Language</label>
             <input
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700"
               name="language"
@@ -65,7 +70,7 @@ const Modal = ({ show, onClose, employee, onUpdate }) => {
             />
           </div>
           <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2">Grade</label>
+            <label className="block text-[#5443c3] text-sm font-bold mb-2">Grade</label>
             <input
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700"
               name="grade"
@@ -74,7 +79,7 @@ const Modal = ({ show, onClose, employee, onUpdate }) => {
             />
           </div>
           <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2">Team Name</label>
+            <label className="block text-[#5443c3] text-sm font-bold mb-2">Team Name</label>
             <input
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700"
               name="group"
@@ -86,14 +91,14 @@ const Modal = ({ show, onClose, employee, onUpdate }) => {
             <button
               type="button"
               onClick={handleUpdate}
-              className="mr-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+              className="mr-2 bg-[#5443c3] hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
             >
               Update
             </button>
             <button
               type="button"
               onClick={onClose}
-              className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+              className=" bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded"
             >
               Close
             </button>
@@ -129,11 +134,14 @@ const EmployeeDetails = () => {
 
   const handleDelete = async (employeeId) => {
     try {
-      alert("Are you sure? The data will be deleted permanently.");
-      await axios.delete(`http://localhost:5001/api/employeeRegistration/${employeeId}`);
-      setEmployees(employees.filter(employee => employee.employeeId !== employeeId));
+      if (window.confirm("Are you sure? The data will be deleted permanently.")) {
+        await axios.delete(`http://localhost:5001/api/employeeRegistration/${employeeId}`);
+        setEmployees(employees.filter(employee => employee.employeeId !== employeeId));
+        toast.success("Employee deleted successfully");
+      }
     } catch (error) {
       console.error('Error deleting employee', error);
+      toast.error("Error deleting employee");
     }
   };
 
@@ -141,25 +149,28 @@ const EmployeeDetails = () => {
     try {
       const res = await axios.put(`http://localhost:5001/api/employeeRegistration/${updatedEmployee.employeeId}`, updatedEmployee);
       setEmployees(employees.map(employee => employee.employeeId === updatedEmployee.employeeId ? res.data.updatedEmployee : employee));
+      toast.success("Employee updated successfully");
     } catch (error) {
       console.error('Error updating employee', error);
+      toast.error("Error updating employee");
     }
   };
 
   return (
-    <div className="w-full p-6 bg-gray-100 rounded-lg shadow-md">
+    <div className="w-full p-6 bg-[#e8effe] text-[#5443c3] rounded-lg shadow-md">
+      <ToastContainer />
       <h1 className="text-2xl font-bold mb-4">Employee Details</h1>
-      <div className="overflow-x-auto">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
+      <div className="overflow-x-auto ">
+        <table className="min-w-full divide-y divide-gray-200 ">
+          <thead className="bg-[#5443c3]">
             <tr>
-              <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-              <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Employee ID</th>
-              <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">State</th>
-              <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Language</th>
-              <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Grade</th>
-              <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Team Name</th>
-              <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+              <th className="py-3 px-4 text-left text-xs font-medium text-white uppercase tracking-wider">Name</th>
+              <th className="py-3 px-4 text-left text-xs font-medium text-white uppercase tracking-wider">Employee ID</th>
+              <th className="py-3 px-4 text-left text-xs font-medium text-white uppercase tracking-wider">State</th>
+              <th className="py-3 px-4 text-left text-xs font-medium text-white uppercase tracking-wider">Language</th>
+              <th className="py-3 px-4 text-left text-xs font-medium text-white uppercase tracking-wider">Grade</th>
+              <th className="py-3 px-4 text-left text-xs font-medium text-white uppercase tracking-wider">Team Name</th>
+              <th className="py-3 px-4 text-left text-xs font-medium text-white uppercase tracking-wider">Actions</th>
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
@@ -172,11 +183,11 @@ const EmployeeDetails = () => {
                 <td className="py-4 px-4 whitespace-nowrap">{employee.grade}</td>
                 <td className="py-4 px-4 whitespace-nowrap">{employee.group}</td>
                 <td className="py-4 px-4 whitespace-nowrap flex">
-                  <button onClick={() => handleEdit(employee)} className="mr-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                    Edit
+                  <button onClick={() => handleEdit(employee)} className="mr-2 bg-[#5443c3] hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                    <FaEdit />
                   </button>
                   <button onClick={() => handleDelete(employee.employeeId)} className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
-                    Delete
+                    <RiDeleteBinLine />
                   </button>
                 </td>
               </tr>

@@ -15,7 +15,7 @@ const AdminRegistration = () => {
          <div className="text-center mb-6">
         <img src={logo} alt="Chatvia Logo" className="mx-auto mb-4" />
         <h2 className="text-2xl font-semibold">Sign in</h2>
-        <p className="text-gray-600 mt-5">Sign in to continue with Attica Chat Portal.</p>
+        <p className="text-gray-600 mt-5">Sign in to continue with Attic Chat Portal.</p>
       </div>
     <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md mx-4">
 
