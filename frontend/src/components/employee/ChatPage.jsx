@@ -151,7 +151,7 @@ const ChatPage = () => {
               key={index}
               className={`flex ${message.employeeId === localStorage.getItem("EmployeeId") ? 'justify-end' : 'justify-start'} mt-4 mx-4`}
             >
-              <div className={`max-w-xs p-3 rounded-md ${message.employeeId === localStorage.getItem("EmployeeId") ? 'bg-[#5443c3] text-white  rounded-bl-3xl  rounded-tr-3xl' : 'bg-white text-[#5443c3] rounded-tl-3xl rounded-br-3xl '}`}>
+              <div className={`max-w-xs p-3 rounded-md ${message.employeeId === localStorage.getItem("EmployeeId") ? 'bg-[#5443c3] text-white rounded-tl-3xl rounded-bl-3xl  rounded-tr-3xl' : 'bg-white text-[#5443c3] rounded-tl-3xl rounded-br-3xl rounded-tr-3xl'}`}>
 
                 <div className='flex gap-2 text-xs mt-2'>
                   <p>{message.time}</p>

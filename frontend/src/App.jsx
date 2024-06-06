@@ -10,31 +10,34 @@ import FirstPage from "./components/FirstPage";
 import Groups from "./components/admin/Pages/Groups";
 import LiveChatMessages from "./components/admin/Pages/LiveChatMessages";
 import Message from "./components/admin/Message";
+import React from 'react';
+import AttticDashboard from './Dashboard components/AtticDashboard'
 // import AdminRegistration from "./components/admin/AdminRegistration";
 
 const App = () => {
   return (
     <BrowserRouter>
-          <Routes>
-          <Route path="/" element={<FirstPage/>} />
-            <Route path="/login" element={<Login/>} />
-            <Route path="/adminlogin" element={<AdminLogin/>} />
-            {/* <Route path="/adminRegistration" element={<AdminRegistration/>}/> */}
-            <Route element={<AuthRequired/>}>
-              <Route path="/chat" element={<ChatPage/>} />
-            <Route path="/register" element={<Register/>} />
-
-              <Route element={<AdminRoutes/>}>
-                <Route path="/admin/dashboard" element={<Dashboard/>} />
-                <Route path="/chat" element={<ChatPage/>}/>
-                <Route path="/Groups" element={<Groups/>}/>
-                <Route path="/livemesages" element={<LiveChatMessages/>}/>
-                <Route path="/message/:selectedGroupName/:selectedGrade" element={<Message />} />
-              </Route>
-            </Route>
-          </Routes>
+      <Routes>
+        <Route path="/" element={<FirstPage />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/adminlogin" element={<AdminLogin />} />
+        {/* <Route path="/adminRegistration" element={<AdminRegistration/>}/> */}
+        <Route element={<AuthRequired />}>
+          <Route path="/chat" element={<ChatPage />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/atticDashboard" element={<AttticDashboard />} />
+          <Route element={<AdminRoutes />}>
+            <Route path="/admin/dashboard" element={<Dashboard />} />
+            <Route path="/chat" element={<ChatPage />} />
+            <Route path="/Groups" element={<Groups />} />
+            <Route path="/livemesages" element={<LiveChatMessages />} />
+            <Route path="/message/:selectedGroupName/:selectedGrade" element={<Message />} />
+          </Route>
+        </Route>
+      </Routes>
     </BrowserRouter>
+
   )
-} 
+}
 
 export default App 
