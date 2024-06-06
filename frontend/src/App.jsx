@@ -10,6 +10,8 @@ import FirstPage from "./components/FirstPage";
 import Groups from "./components/admin/Pages/Groups";
 import LiveChatMessages from "./components/admin/Pages/LiveChatMessages";
 import Message from "./components/admin/Message";
+import SuperAdminLogin from './components/SuperAdmin/SuperAdminLogin'
+import SuperAdminDashboard from './components/SuperAdmin/SuperAdminDashboard'
 // import AdminRegistration from "./components/admin/AdminRegistration";
 
 const App = () => {
@@ -19,6 +21,8 @@ const App = () => {
           <Route path="/" element={<FirstPage/>} />
             <Route path="/login" element={<Login/>} />
             <Route path="/adminlogin" element={<AdminLogin/>} />
+            <Route path="/superAdminLogin" element={<SuperAdminLogin/>} />
+            <Route path="/superAdminDashboard" element={<SuperAdminDashboard/>} />
             {/* <Route path="/adminRegistration" element={<AdminRegistration/>}/> */}
             <Route element={<AuthRequired/>}>
               <Route path="/chat" element={<ChatPage/>} />
