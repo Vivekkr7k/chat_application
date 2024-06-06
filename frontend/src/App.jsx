@@ -23,7 +23,7 @@ const App = () => {
             <Route element={<AuthRequired/>}>
               <Route path="/chat" element={<ChatPage/>} />
             <Route path="/register" element={<Register/>} />
-
+           
               <Route element={<AdminRoutes/>}>
                 <Route path="/admin/dashboard" element={<Dashboard/>} />
                 <Route path="/chat" element={<ChatPage/>}/>

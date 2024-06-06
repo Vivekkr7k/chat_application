@@ -7,12 +7,16 @@ import { BiLogOut } from "react-icons/bi";
 import logo from "../../assests/logo.png";
 import { SiLivechat } from "react-icons/si";
 import { useNavigate } from 'react-router-dom';
-
+import { GrChatOption } from "react-icons/gr";
 const Sidebar = () => {
   const navigate = useNavigate();
 
   const handleGroup = () => {
     navigate("/Groups");
+  };
+
+  const handleChat = () => {
+    navigate("/chat");
   };
 
   const handleEmployeeRegister = () => {
@@ -42,6 +46,12 @@ const Sidebar = () => {
           </span>
         </div> */}
         <div onClick={handleGroup} className="group relative flex items-center bg-[#fffefd] rounded-full p-3 md:p-5">
+        <GrChatOption />
+          <span className="absolute bottom-full lg:bottom-auto lg:left-full ml-2 lg:ml-0 lg:mt-2 whitespace-nowrap bg-white text-black text-xs md:text-sm rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            Group Chat
+          </span>
+        </div>
+        <div onClick={handleChat} className="group relative flex items-center bg-[#fffefd] rounded-full p-3 md:p-5">
           <BsChatSquareDots />
           <span className="absolute bottom-full lg:bottom-auto lg:left-full ml-2 lg:ml-0 lg:mt-2 whitespace-nowrap bg-white text-black text-xs md:text-sm rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
             Chat

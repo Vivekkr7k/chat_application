@@ -1,232 +1,209 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { FaDotCircle } from "react-icons/fa";
-import { IoMdSend } from "react-icons/io";
-import { BiLogOut } from "react-icons/bi";
-import { useNavigate } from 'react-router-dom';
-import { IoMdDocument } from "react-icons/io";
-import UploadModel from './UploadModel';
+import React, { useState, useEffect, useRef } from "react";
+import axios from "axios";
+import { AiOutlineSearch } from "react-icons/ai";
+import FileUploadModel from "./FileUploadModel";
 
-const ChatPage = () => {
-  const [inputValue, setInputValue] = useState('');
+function ChatPage() {
   const [messages, setMessages] = useState([]);
-  const [employeeDetails, setEmployeeDetails] = useState(null);
-  const [teamName, setTeamName] = useState('');
-  const [grade, setGrade] = useState('');
-  const [notifications, setNotifications] = useState([]);
+  const [newMessage, setNewMessage] = useState("");
+  const [users, setUsers] = useState([]);
+  const loggedInUserId = localStorage.getItem("CurrentUserId");
+  const [recipient, setRecipient] = useState("");
+  const [recipientName, setRecipientName] = useState(""); // New state for recipient's name
+  const [sender, setSender] = useState("");
+  const [attachment, setAttachment] = useState(null);
+  const [searchQuery, setSearchQuery] = useState(""); // New state for search query
   const messagesEndRef = useRef(null);
 
-  const navigate = useNavigate();
-  // console.log(messages)
+  const handleClick = (id, name) => {
+    setSender(loggedInUserId);
+    setRecipient(id);
+    setRecipientName(name); // Update recipient's name
+    fetchMessages(loggedInUserId, id);
+  };
+
+  const fetchMessages = (sender, recipient) => {
+    axios
+      .get(`http://localhost:5001/api/getmessages/${recipient}/${sender}`)
+      .then((response) => {
+        setMessages(response.data);
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
 
   useEffect(() => {
-    fetchEmployeeDetails();
-  }, []);
+    axios
+      .get("http://localhost:5001/api/adminRegistration/getAllEmployess")
+      .then((response) => {
+        const filteredUsers = response.data.filter(
+          (user) => user._id && user.name !== loggedInUserId
+        );
+        setUsers(filteredUsers);
+        console.log("getAllUsers.....", response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, [loggedInUserId]);
 
   useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
-
-  useEffect(() => {
-    const interval = setInterval(checkForNewMessages, 1000);
-    return () => clearInterval(interval);
-  }, [messages]);
-
-  const fetchEmployeeDetails = async () => {
-    try {
-      const employeeId = localStorage.getItem("EmployeeId");
-      const response = await fetch(`http://localhost:5001/api/employeeDetails/${employeeId}`);
-      if (response.ok) {
-        const data = await response.json();
-        setEmployeeDetails(data);
-        setTeamName(data.group);
-        setGrade(data.grade);
-
-        const messagesResponse = await fetch(`http://localhost:5001/api/Emessages?teamName=${data.group}&grade=${data.grade}`);
-        if (messagesResponse.ok) {
-          const messagesData = await messagesResponse.json();
-          if (Array.isArray(messagesData)) {
-            setMessages(messagesData);
-          } else {
-            setMessages([]);
-          }
-        }
-      }
-    } catch (error) {
-      console.error('Error fetching employee details:', error.message);
+    if (sender && recipient) {
+      fetchMessages(sender, recipient);
     }
+  }, [sender, recipient]);
+
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
+  const handleSendMessage = () => {
+    if (!newMessage.trim() && !attachment) return;
+
+    const messageData = {
+      sender: loggedInUserId,
+      recipient: recipient,
+      text: newMessage,
+      image: attachment?.type.startsWith("image/") ? attachment.url : null,
+      document: attachment?.type.startsWith("application/") ? attachment.url : null,
+      video: attachment?.type.startsWith("video/") ? attachment.url : null,
+    };
+
+    axios
+      .post("http://localhost:5001/api/messages", messageData)
+      .then((response) => {
+        setMessages([...messages, response.data.data]);
+        setNewMessage("");
+        setAttachment(null);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   };
 
-  const handleInputChange = (e) => {
-    setInputValue(e.target.value);
-  };
-
-  const handleSendClick = async () => {
-    if (inputValue.trim() !== '') {
-      try {
-        const employeeId = localStorage.getItem("EmployeeId");
-        const response = await fetch('http://localhost:5001/api/messages', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            employeeId: employeeId,
-            message: inputValue,
-            group: teamName,
-            grade: grade
-          })
+  const handleAttachmentChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        setAttachment({
+          url: reader.result,
+          type: file.type,
         });
-
-        if (response.ok) {
-          const newMessage = {
-            employeeId: employeeId,
-            message: inputValue,
-            time: new Date().toLocaleTimeString(),
-            senderType: 'sent'
-          };
-          setMessages(prevMessages => [...prevMessages, newMessage]);
-          setInputValue('');
-        } else {
-          console.error('Failed to send message');
-        }
-      } catch (error) {
-        console.error('Error sending message:', error.message);
-      }
+      };
+      reader.readAsDataURL(file);
     }
   };
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  };
-
-  const handleLogout = () => {
-    navigate("/");
-    localStorage.clear();
-  };
-
-  const checkForNewMessages = async () => {
-    try {
-      const response = await fetch(`http://localhost:5001/api/Emessages?teamName=${teamName}&grade=${grade}`);
-      if (response.ok) {
-        const data = await response.json();
-        if (data && Array.isArray(data) && data.length > messages.length) {
-          const newMessages = data.slice(messages.length);
-          const foreignMessages = newMessages.filter(msg => msg.employeeId !== localStorage.getItem("EmployeeId"));
-          if (foreignMessages.length > 0) {
-            setNotifications(prevNotifications => {
-              const updatedNotifications = [...prevNotifications, ...foreignMessages.map(msg => ({
-                employeeId: msg.employeeId,
-                message: msg.message,
-                time: msg.time
-              }))];
-              return updatedNotifications.slice(-5);
-            });
-          }
-          setMessages(data);
-        }
-      }
-    } catch (error) {
-      console.error('Error checking for new messages:', error);
-    }
-  };
+  // Filter users based on search query
+  const filteredUsers = users.filter((user) =>
+    user.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   return (
-    <div className="relative h-screen">
-      <div className={`flex flex-col h-full ${notifications.length > 0 ? 'blur-sm' : ''}`}>
-        <div className='h-16 bg-[#ffffff] flex justify-between items-center px-4 border-b-2 border-gray-300'>
-          <div className='flex items-center gap-2'>
-            <h1 className='text-2xl text-[#5443c3]'>{localStorage.getItem("EmployeeId")}</h1>
-            <p><FaDotCircle className='text-green-500 ' /></p>
-          </div>
-          <div className='flex items-center gap-7 -ml-10 mr-10'>
-            <div onClick={handleLogout} className='text-3xl text-[#5443c3]'>
-              <BiLogOut />
-            </div>
-          </div>
+    <div className="flex h-screen">
+      <div className="w-1/5 bg-gray-100 p-4">
+        <h1 className="text-2xl font-bold mb-4">All Employees</h1>
+        <div className="relative mb-4">
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full p-2 text-sm text-gray-700 bg-gray-200 rounded pl-10"
+            placeholder="Search by name..."
+          />
+          <AiOutlineSearch className="absolute top-3 left-3 text-gray-500" />
         </div>
-
-        <div className='flex-1 bg-[#f6f5fb] border-b-2 border-gray-300 overflow-y-scroll'>
-          {Array.isArray(messages) && messages.map((message, index) => (
+        <table className="w-full max-w-xl">
+          <tbody>
+            {filteredUsers.map((user) => (
+              <div key={user._id}>
+                <div
+                  className="w-full h-14 font-medium rounded-md bg-indigo-200 mb-4 text-2xl flex items-center p-4 cursor-pointer"
+                  onClick={() => handleClick(user._id, user.name)}
+                >
+                  {user.name}
+                </div>
+              </div>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <div className="w-4/5 p-4">
+        <div className="flex justify-center mb-4">
+          <h1 className="text-2xl font-bold">Chat with {recipientName}</h1>
+        </div>
+        <div className="flex flex-col h-4/5 overflow-y-auto mb-4">
+          {messages.map((message, index) => (
             <div
               key={index}
-              className={`flex ${message.employeeId === localStorage.getItem("EmployeeId") ? 'justify-end' : 'justify-start'} mt-4 mx-4`}
+              className={`w-1/3 p-2 ${
+                message.sender === loggedInUserId ? "bg-blue-100" : "bg-gray-200"
+              }`}
             >
-              <div className={`max-w-xs p-3 rounded-md ${message.employeeId === localStorage.getItem("EmployeeId") ? 'bg-[#5443c3] text-white rounded-tl-3xl rounded-bl-3xl  rounded-tr-3xl' : 'bg-white text-[#5443c3] rounded-tl-3xl rounded-br-3xl rounded-tr-3xl'}`}>
-
-                <div className='flex gap-2 text-xs mt-2'>
-                  <p>{message.time}</p>
-                  
-                </div>
-                <div className='flex gap-2 text-xs my-2'>
-                  {
-                    message.employeeId.endsWith("@gmail.com")
-                      ? (<p>AdminID: {message.employeeId}</p>)
-                      : (<p>EmployeeID: {message.employeeId}</p>)
-                  }
-                </div>
-                
-                {message.Document && (
-                  <div className='text-8xl my-2'>
-                    <a href={message.Document} download target="_blank" rel="noopener noreferrer">
-                      <IoMdDocument />
-                    </a>
-                  </div>
-                )}
-                {message.video && (
-                  <div className='text-8xl my-2'>
-                    <video src={message.video} controls></video>
-                  </div>
-                )}
-                <div>
-                  <img src={message.Image} alt="" className='rounded-lg' />
-                </div>
-                <p className='mt-2'>{message.message}</p>
-              </div>
+              {message.content && message.content.text && (
+                <p className="text-sm">{message.content.text}</p>
+              )}
+              {message.content && message.content.image && (
+                <img
+                  src={message.content.image}
+                  alt="Image"
+                  className="max-w-xs"
+                />
+              )}
+              {message.content && message.content.document && (
+                <a
+                  href={message.content.document}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-500 hover:underline"
+                >
+                  View Document
+                </a>
+              )}
+              {message.content && message.content.video && (
+                <video controls className="max-w-xs">
+                  <source src={message.content.video} type="video/mp4" />
+                  Your browser does not support the video tag.
+                </video>
+              )}
+              <span className="text-xs text-gray-500">
+                {message.sender === loggedInUserId && new Date(message.createdAt).toLocaleString()}
+              </span>
             </div>
           ))}
           <div ref={messagesEndRef} />
         </div>
-
-        <div className=' bg-[#f6f5fb] h-24 flex items-center  rounded-l-lg border-t border-b border-l text-gray-800   w-full focus:outline-none '>
+        <div className="flex justify-center items-center w-3/4  fixed bottom-0 mb-0 pb-0">
           <input
             type="text"
-            value={inputValue}
-            onChange={handleInputChange}
-            placeholder='Type your Message'
-            className='w-full h-10 ml-6 border-gray-200 bg-white rounded-md cursor-text pl-4 placeholder-[#5443c3] focus:outline-none '
+            value={newMessage}
+            onChange={(e) => setNewMessage(e.target.value)}
+            className="w-full p-2 text-sm text-gray-700 bg-gray-200"
+            placeholder="Type a message..."
           />
-          <div className='flex justify-center items-center gap-4 ml-4'>
-            <button onClick={handleSendClick} className='text-2xl bg-[#5443c3] p-3 text-white rounded-md mr-4'>
-              <IoMdSend />
-            </button>
-          </div>
-          <UploadModel selectedGroupName={teamName} selectedGrade={grade} />
+          <input
+            type="file"
+            onChange={handleAttachmentChange}
+            className="hidden"
+            id="file-upload"
+          />
+  <button
+  onClick={handleSendMessage}
+  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-2"
+>
+  Send
+</button>
+
+
+
+          <FileUploadModel sender={loggedInUserId} recipient={recipient} />
         </div>
       </div>
-
-      {notifications.length > 0 && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 z-40"></div>
-      )}
-
-      {notifications.map((notification, index) => (
-        <div
-          key={index}
-          className={`fixed p-12 px-16 text-2xl rounded-lg shadow-lg z-50 transition-transform transform ${index % 2 === 0 ? 'left-1/4' : 'right-1/4'} bg-green-500 text-white`}
-          style={{ top: `${index * 120 + 60}px`, width: '300px' }}
-        >
-          <button
-            className="absolute top-2 right-2 text-white hover:text-gray-200"
-            onClick={() => setNotifications(notifications.filter((_, i) => i !== index))}
-          >
-            &times;
-          </button>
-          <p className="font-bold text-lg mb-2">{notification.employeeId}:</p>
-          <p className="text-md mb-2">{notification.message}</p>
-          <p className="text-xs text-gray-200">{notification.time}</p>
-        </div>
-      ))}
     </div>
   );
-};
+}
 
 export default ChatPage;

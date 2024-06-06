@@ -7,7 +7,7 @@ const Groups = () => {
   return (
     <div className='lg:flex  block'>
       <Sidebar/>
-       <GroupsList/>
+       <GroupsList/>     
       
 
     </div>
