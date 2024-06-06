@@ -67,7 +67,7 @@ export default function FileUploadModel({ sender, recipient }) {
 
       setLoading(true); // Set loading to true before upload starts
       try {
-        const response = await axios.post('http://localhost:5001/api/messages', formData, {
+        const response = await axios.post('http://localhost:5001/api/postmessages', formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
           },

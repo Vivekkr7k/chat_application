@@ -1,19 +1,15 @@
 const express = require("express");
 const router = express.Router();
-const {registerUser,loginUser,currentUser, getAllEmployee, updatePasswordAndConfirmPassword} = require("../controllers/adminRegController");
-const validateToken = require("../middleware/vaildateTokenHandler");
+const {
+  AdminRegistion,
+  AdminLogin,
+  getAllAdmin,
+  delAdminbyId,
+} = require("../controllers/adminRegController"); // Adjust the path as necessary
 
-// Register
-router.post("/register", registerUser);
+router.post("/register", AdminRegistion);
+router.post("/login", AdminLogin); // Changed from adminRouter.login
+router.get("/getAllAdmin", getAllAdmin); // Changed from adminRouter.login
+router.delete("/delAdminbyId/:id", delAdminbyId);
 
-//Login
-router.post("/login",loginUser);
-
-router.get("/getAllEmployess" ,getAllEmployee)
-
-router.patch("/updatePassword/:employeeId" , updatePasswordAndConfirmPassword)
-
-    // Current user information
- router.get("/Current",validateToken, currentUser);
-
-  module.exports = router
+module.exports = router;

@@ -21,13 +21,13 @@ function ChatPage() {
     setRecipientName(name); // Update recipient's name
     fetchMessages(loggedInUserId, id);
   };
-
+ console.log("recipient  ",recipient)
   const fetchMessages = (sender, recipient) => {
     axios
       .get(`http://localhost:5001/api/getmessages/${recipient}/${sender}`)
       .then((response) => {
         setMessages(response.data);
-        console.log(response.data);
+        console.log("gettttt",response.data);
       })
       .catch((error) => {
         console.error(error);
@@ -36,7 +36,7 @@ function ChatPage() {
 
   useEffect(() => {
     axios
-      .get("http://localhost:5001/api/adminRegistration/getAllEmployess")
+      .get("http://localhost:5001/api/employeeRegistration/")
       .then((response) => {
         const filteredUsers = response.data.filter(
           (user) => user._id && user.name !== loggedInUserId
@@ -72,7 +72,7 @@ function ChatPage() {
     };
 
     axios
-      .post("http://localhost:5001/api/messages", messageData)
+      .post("http://localhost:5001/api/postmessages", messageData)
       .then((response) => {
         setMessages([...messages, response.data.data]);
         setNewMessage("");
@@ -118,11 +118,11 @@ function ChatPage() {
         </div>
         <table className="w-full max-w-xl">
           <tbody>
-            {filteredUsers.map((user) => (
+           {users.map((user) => (
               <div key={user._id}>
                 <div
                   className="w-full h-14 font-medium rounded-md bg-indigo-200 mb-4 text-2xl flex items-center p-4 cursor-pointer"
-                  onClick={() => handleClick(user._id, user.name)}
+                  onClick={() => handleClick(user._id,user.name)}
                 >
                   {user.name}
                 </div>

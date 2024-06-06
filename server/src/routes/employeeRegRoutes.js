@@ -1,6 +1,14 @@
 const express = require("express");
 const router = express.Router();
-const { registerEmployee, loginUser, getAllEmployees, updateEmployee, deleteEmployee, getTotalMemberAccordingToGroup } = require("../controllers/employeeRegController");
+const {
+  registerEmployee,
+  loginUser,
+  getAllEmployees,
+  updateEmployee,
+  deleteEmployee,
+  getTotalMemberAccordingToGroup,
+  getEmployeeById,
+} = require("../controllers/employeeRegController");
 
 // Register
 router.post("/register", registerEmployee);
@@ -16,6 +24,7 @@ router.put("/:employeeId", updateEmployee);
 
 // Delete employee
 router.delete("/:employeeId", deleteEmployee);
-router.get("/getTotalMember" ,getTotalMemberAccordingToGroup)
+router.get("/getTotalMember", getTotalMemberAccordingToGroup);
+router.get("/getEmploybyId/:id", getEmployeeById);
 
 module.exports = router;
