@@ -3,6 +3,7 @@ const jwt = require("jsonwebtoken");
 
 const registerManager = async (req, res) => {
   const {
+    manager_Id,
     manager_name,
     manager_email,
     manager_password,
@@ -12,10 +13,12 @@ const registerManager = async (req, res) => {
     branch_state,
     branch_pincode,
     branch_name,
+    branch_address,
   } = req.body;
 
   try {
     if (
+      !manager_Id ||
       !manager_name ||
       !manager_email ||
       !manager_password ||
@@ -24,7 +27,8 @@ const registerManager = async (req, res) => {
       !branch_state ||
       !branch_pincode ||
       !branch_city ||
-      !branch_name
+      !branch_name ||
+      !branch_address
     ) {
       return res.status(400).json({ message: "Please fill all the fields" });
     }
@@ -35,6 +39,7 @@ const registerManager = async (req, res) => {
     }
 
     const newManager = new ManagerDetails({
+      manager_Id,
       manager_name,
       manager_email,
       manager_password,
@@ -44,6 +49,7 @@ const registerManager = async (req, res) => {
       branch_state,
       branch_pincode,
       branch_name,
+      branch_address,
     });
 
     const managerresp = await newManager.save();

@@ -221,90 +221,6 @@ app.post("/api/groups", async (req, res) => {
   }
 });
 
-// API endpoint to send a new message
-// API endpoint to send a new message
-// API endpoint to send a new messageconst uploadDocument = multer({ storage: documentStorage }).single("document");
-
-// Update your route handler to handle both image and document uploads
-// app.post("/api/messages", async (req, res) => {
-//     try {
-//       // Handle image upload
-//       uploadImage(req, res, async function (err) {
-//         if (err) {
-//           return res.status(400).json({ error: "Image upload failed" });
-//         }
-
-//         // Handle document upload
-//         uploadDocument(req, res, async function (err) {
-//           if (err) {
-//             return res.status(400).json({ error: "Document upload failed" });
-//           }
-
-//           const { employeeId, message, group, grade } = req.body;
-
-//           console.log(employeeId, message, group, grade);
-
-//           // Find the chat room by group name and grade
-//           let chatRoom = await ChatModel.findOne({ group, grade });
-
-//           if (!chatRoom) {
-//             return res.status(400).json({
-//               error: `Chat room with group "${group}" and grade "${grade}" does not exist`,
-//             });
-//           }
-
-//           // Check if image and document files are provided
-//           if (!req.file || !req.file.filename || !req.file.path || !req.file.originalname) {
-//             return res.status(400).json({ error: "Image file is required" });
-//           }
-//           if (!req.file || !req.file.filename || !req.file.path || !req.file.originalname) {
-//             return res.status(400).json({ error: "Document file is required" });
-//           }
-
-//           const imageLocalPath = req.file.path;
-//           const documentLocalPath = req.file.path;
-
-//           // Upload image to Cloudinary
-//           const imageUploadResult = await uploadOnCloudinary(imageLocalPath);
-
-//           if (!imageUploadResult || !imageUploadResult.url) {
-//             console.error(
-//               "Image upload failed:",
-//               imageUploadResult && imageUploadResult.error ? imageUploadResult.error : "Unknown error"
-//             );
-//             return res
-//               .status(400)
-//               .json({ error: "Image upload failed. Please try again." });
-//           }
-
-//           // Upload document to Cloudinary
-//           const documentUploadResult = await uploadOnCloudinary(documentLocalPath);
-
-//           if (!documentUploadResult || !documentUploadResult.url) {
-//             console.error(
-//               "Document upload failed:",
-//               documentUploadResult && documentUploadResult.error ? documentUploadResult.error : "Unknown error"
-//             );
-//             return res
-//               .status(400)
-//               .json({ error: "Document upload failed. Please try again." });
-//           }
-
-//           // Add the new message to the chat room
-//           chatRoom.messages.push({ employeeId, message, Image: imageUploadResult.url, Document: documentUploadResult.url });
-
-//           // Save the updated chat room
-//           await chatRoom.save();
-
-//           res.status(201).json({ message: "Message sent successfully" });
-//         });
-//       });
-//     } catch (error) {
-//       console.error("Error sending message:", error);
-//       res.status(500).json({ error: "Internal server error" }); // Send 500 status code in case of error
-//     }
-//   });
-
 // API endpoint to delete a group by group name and grade
 app.delete("/api/groups/:groupName/:grade", async (req, res) => {
   const { groupName, grade } = req.params;
@@ -427,6 +343,10 @@ app.use("/api/superAdmin", superAdminRoutes);
 app.use("/api/serverControl", require("./src/routes/serverControlRoutes.js"));
 app.use("/location", require("./src/routes/locationRoute.js"));
 app.use(cookieParser());
+
+//billingTeam routes
+
+app.use("/api/billingTeam", require("./src/routes/billingTeamUserRoutes.js"));
 
 // Routes
 app.use("/api/manager", managerRoutes);

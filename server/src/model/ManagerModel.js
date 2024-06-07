@@ -3,6 +3,11 @@ const bcrypt = require("bcryptjs");
 
 const managerSchema = new mongoose.Schema(
   {
+    manager_Id: {
+      type: String,
+      required: true,
+      unique: true, // Ensure the email is unique
+    },
     manager_name: {
       type: String,
       required: true,
@@ -37,6 +42,10 @@ const managerSchema = new mongoose.Schema(
       required: true,
     },
     branch_pincode: {
+      type: String,
+      required: true,
+    },
+    branch_address: {
       type: String,
       required: true,
     },
