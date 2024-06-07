@@ -100,19 +100,19 @@ const getMessagesEmp = async (req, res) => {
   }
 
   try {
-    const oneMinuteAgo = new Date(Date.now() - 60 * 1000); // 1 minute in milliseconds
+    const twoHoursAgo = new Date(Date.now() - 2 * 60 * 60 * 1000); // 2 hours in milliseconds
 
     const messages = await MessageRes.find({
       $or: [
         {
           sender: userId1,
           recipient: userId2,
-          createdAt: { $gte: oneMinuteAgo },
+          createdAt: { $gte: twoHoursAgo },
         },
         {
           sender: userId2,
           recipient: userId1,
-          createdAt: { $gte: oneMinuteAgo },
+          createdAt: { $gte: twoHoursAgo },
         },
       ],
     }).sort({ createdAt: 1 });
