@@ -12,6 +12,9 @@ import LiveChatMessages from "./components/admin/Pages/LiveChatMessages";
 import Message from "./components/admin/Message";
 import SuperAdminLogin from './components/SuperAdmin/SuperAdminLogin'
 import SuperAdminDashboard from './components/SuperAdmin/SuperAdminDashboard'
+import BillingTeamRegister from './components/admin/BillingTeamRegister'
+import ManagerRegister from "./components/admin/ManagerRegister";
+import ManagerLogin from "./components/manager/ManagerLogin"
 // import AdminRegistration from "./components/admin/AdminRegistration";
 
 const App = () => {
@@ -27,6 +30,9 @@ const App = () => {
             <Route element={<AuthRequired/>}>
               <Route path="/chat" element={<ChatPage/>} />
             <Route path="/register" element={<Register/>} />
+            <Route path="/billingTeamRegister" element={<BillingTeamRegister/>} />
+            <Route path="/managerRegister" element={<ManagerRegister/>} />
+            <Route path="/managerLogin" element={<ManagerLogin/>} />
            
               <Route element={<AdminRoutes/>}>
                 <Route path="/admin/dashboard" element={<Dashboard/>} />

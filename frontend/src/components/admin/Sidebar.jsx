@@ -1,5 +1,4 @@
-import React from 'react';
-import { CgProfile } from "react-icons/cg";
+import React, { useState } from 'react';
 import { BsChatSquareDots } from "react-icons/bs";
 import { MdGroups } from "react-icons/md";
 import { RiContactsLine } from "react-icons/ri";
@@ -8,8 +7,10 @@ import logo from "../../assests/logo.png";
 import { SiLivechat } from "react-icons/si";
 import { useNavigate } from 'react-router-dom';
 import { GrChatOption } from "react-icons/gr";
+
 const Sidebar = () => {
   const navigate = useNavigate();
+  const [showEmployeeOptions, setShowEmployeeOptions] = useState(false);
 
   const handleGroup = () => {
     navigate("/Groups");
@@ -22,6 +23,14 @@ const Sidebar = () => {
   const handleEmployeeRegister = () => {
     navigate("/register");
   };
+
+  const handleBillingTeamRegister = () => {
+    navigate("/billingTeamRegister");
+  };
+
+  const handleManagerRegister = () => {
+    navigate("/managerRegister")
+  }
 
   const handleLogout = () => {
     navigate("/");
@@ -39,37 +48,32 @@ const Sidebar = () => {
       </div>
       
       <div className="flex flex-row lg:flex-col gap-[10px] sm:gap-[10px] md:gap-[10px] lg:gap-[40px] relative">
-        {/* <div className="group relative flex items-center bg-[#fffefd] rounded-full p-3 md:p-5">
-          <CgProfile />
-          <span className="absolute bottom-full lg:bottom-auto lg:left-full ml-2 lg:ml-0 lg:mt-2 whitespace-nowrap bg-white text-black text-xs md:text-sm rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            Profile
-          </span>
-        </div> */}
-        <div onClick={handleGroup} className="group relative flex items-center bg-[#fffefd] rounded-full p-3 md:p-5">
-        <GrChatOption />
+        <div onClick={handleGroup} className="group relative flex items-center bg-[#fffefd] rounded-full p-3 md:p-5 cursor-pointer">
+          <GrChatOption />
           <span className="absolute bottom-full lg:bottom-auto lg:left-full ml-2 lg:ml-0 lg:mt-2 whitespace-nowrap bg-white text-black text-xs md:text-sm rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
             Group Chat
           </span>
         </div>
-        <div onClick={handleChat} className="group relative flex items-center bg-[#fffefd] rounded-full p-3 md:p-5">
+        <div onClick={handleChat} className="group relative flex items-center bg-[#fffefd] rounded-full p-3 md:p-5 cursor-pointer">
           <BsChatSquareDots />
           <span className="absolute bottom-full lg:bottom-auto lg:left-full ml-2 lg:ml-0 lg:mt-2 whitespace-nowrap bg-white text-black text-xs md:text-sm rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
             Chat
           </span>
         </div>
-        <div onClick={handleEmployeeRegister} className="group relative flex items-center bg-[#fffefd] rounded-full p-3 md:p-5">
+        <div
+          onMouseEnter={() => setShowEmployeeOptions(true)}
+          onMouseLeave={() => setShowEmployeeOptions(false)}
+          className="group relative flex items-center bg-[#fffefd] rounded-full p-3 md:p-5 cursor-pointer">
           <MdGroups />
-          <span className="absolute bottom-full lg:bottom-auto lg:left-full ml-2 lg:ml-0 lg:mt-2 whitespace-nowrap bg-white text-black text-xs md:text-sm rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            Register Employee
+          <span className="absolute bottom-full lg:bottom-auto lg:left-full ml-2 lg:ml-0 lg:mt-2 whitespace-nowrap bg-white text-black text-xs md:text-sm rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                style={{ display: showEmployeeOptions ? 'block' : 'none' }}>
+            <div onClick={handleEmployeeRegister} className="cursor-pointer">Employee Registration</div>
+            <div onClick={handleBillingTeamRegister} className="cursor-pointer">Billing Team Registration</div>
+            <div onClick={handleManagerRegister} className="cursor-pointer">Manager Registration</div>
           </span>
         </div>
-        {/* <div className="group relative flex items-center bg-[#fffefd] rounded-full p-3 md:p-5">
-          <RiContactsLine />
-          <span className="absolute bottom-full lg:bottom-auto lg:left-full ml-2 lg:ml-0 lg:mt-2 whitespace-nowrap bg-white text-black text-xs md:text-sm rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            Contacts
-          </span>
-        </div> */}
-        <div onClick={handleLiveChat} className="group relative flex items-center bg-[#fffefd] rounded-full p-3 md:p-5">
+        
+        <div onClick={handleLiveChat} className="group relative flex items-center bg-[#fffefd] rounded-full p-3 md:p-5 cursor-pointer">
           <SiLivechat />
           <span className="absolute bottom-full lg:bottom-auto lg:left-full ml-2 lg:ml-0 lg:mt-2 whitespace-nowrap bg-white text-black text-xs md:text-sm rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
             Live Chat
@@ -77,7 +81,7 @@ const Sidebar = () => {
         </div>
       </div>
       
-      <div onClick={handleLogout} className="group relative flex items-center bg-[#fffefd] rounded-full p-3 md:p-5 ">
+      <div onClick={handleLogout} className="group relative flex items-center bg-[#fffefd] rounded-full p-3 md:p-5 cursor-pointer">
         <BiLogOut />
         <span className="absolute bottom-full lg:bottom-auto lg:left-full ml-2 lg:ml-0 lg:mt-2 whitespace-nowrap bg-white text-black text-xs md:text-sm rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
           Logout
