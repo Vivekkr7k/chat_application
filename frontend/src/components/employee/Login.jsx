@@ -24,8 +24,9 @@ const Login = () => {
       const response = await axios.post('http://localhost:5001/api/employeeRegistration/login', { employeeId, password });
       setLoading(false);
       localStorage.setItem('token', response.data.accessToken);
-      console.log(response.data.accessToken);
-      localStorage.setItem('EmployeeId', employeeId);
+      console.log("response.data   ",response.data);
+      //localStorage.setItem('EmployeeId', response.data._id);
+     localStorage.setItem("CurrentUserId", response.data._id)
       navigate('/chat');
     } catch (err) {
       setLoading(false);

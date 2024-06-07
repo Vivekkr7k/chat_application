@@ -22,7 +22,7 @@ const AdminLogin = () => {
     setError('');
 
     try {
-      const response = await axios.post('http://localhost:5001/api/adminRegistration/login', { email, password });
+      const response = await axios.post('http://localhost:5001/api/admin/login', { email, password });
       setLoading(false);
       localStorage.setItem('token', response.data.accessToken);
       localStorage.setItem('AdminId', email);

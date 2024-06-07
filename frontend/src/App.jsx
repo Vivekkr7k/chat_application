@@ -10,19 +10,43 @@ import FirstPage from "./components/FirstPage";
 import Groups from "./components/admin/Pages/Groups";
 import LiveChatMessages from "./components/admin/Pages/LiveChatMessages";
 import Message from "./components/admin/Message";
+import SuperAdminLogin from './components/SuperAdmin/SuperAdminLogin'
+import SuperAdminDashboard from './components/SuperAdmin/SuperAdminDashboard'
 import React from 'react';
-import AttticDashboard from './Dashboard components/AtticDashboard'
+import AttticDashboard from './Dashboard components/AtticDashboard.jsx'
 // import AdminRegistration from "./components/admin/AdminRegistration";
 
 const App = () => {
   return (
     <BrowserRouter>
-      <Routes>
+          <Routes>
+          <Route path="/" element={<FirstPage/>} />
+            <Route path="/login" element={<Login/>} />
+            <Route path="/adminlogin" element={<AdminLogin/>} />
+            <Route path="/superAdminLogin" element={<SuperAdminLogin/>} />
+            <Route path="/superAdminDashboard" element={<SuperAdminDashboard/>} />
+            {/* <Route path="/adminRegistration" element={<AdminRegistration/>}/> */}
+            <Route element={<AuthRequired/>}>
+              <Route path="/chat" element={<ChatPage/>} />
+            <Route path="/register" element={<Register/>} />
+            <Route path="/atticDashboard" element={<AttticDashboard/>} />
+            
+           
+              <Route element={<AdminRoutes/>}>
+                <Route path="/admin/dashboard" element={<Dashboard/>} />
+                <Route path="/chat" element={<ChatPage/>}/>
+                <Route path="/Groups" element={<Groups/>}/>
+                <Route path="/livemesages" element={<LiveChatMessages/>}/>
+                <Route path="/message/:selectedGroupName/:selectedGrade" element={<Message />} />
+              </Route>
+            </Route>
+          </Routes>
+      {/* <Routes>
         <Route path="/" element={<FirstPage />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/adminlogin" element={<AdminLogin />} />
+        <Route path="/adminlogin" element={<AdminLogin />} /> */}
         {/* <Route path="/adminRegistration" element={<AdminRegistration/>}/> */}
-        <Route element={<AuthRequired />}>
+        {/* <Route element={<AuthRequired />}>
           <Route path="/chat" element={<ChatPage />} />
           <Route path="/register" element={<Register />} />
           <Route path="/atticDashboard" element={<AttticDashboard />} />
@@ -34,7 +58,7 @@ const App = () => {
             <Route path="/message/:selectedGroupName/:selectedGrade" element={<Message />} />
           </Route>
         </Route>
-      </Routes>
+      </Routes> */}
     </BrowserRouter>
 
   )

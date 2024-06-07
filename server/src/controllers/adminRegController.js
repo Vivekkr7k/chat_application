@@ -1,168 +1,70 @@
-const asyncHandler = require("express-async-handler");
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken")
-const AdminReg = require("../model/adminRegModel")
+const Admin = require("../model/adminRegModel");
 
-const EmployeeReg=require("../model/employeeRegModel")
-
-
-// @desc Register a admin
-//@route POST/api/users/register
-//@access public
-
-
-const registerUser = asyncHandler(async (req, resp) => {
-
-    const { email, password, confirmPassword } = req.body;
-    if(password !== confirmPassword )
-    {
-        resp.status(400);
-        throw new Error("password and confirmPassword are not matched !");
-      }
-
-    if (  !email || !password || !confirmPassword) {
-        resp.status(400);
-        throw new Error("All fields are mandatory !");
-    }
-
-    const administratorUserAvailable = await AdminReg.findOne({ email });
-    if (administratorUserAvailable) {
-        resp.status(400);
-        throw new Error("User already registered !");
-    }
-
-
-
-    //Hash password;
-    const hashedPassword = await bcrypt.hash(password, 10);
-    console.log("Hashed Password", hashedPassword)
-    console.log("hi")
-//console.log
-    //Hash confirmPassword;
-
-    const hashedCpassword = await bcrypt.hash(confirmPassword, 10);
-    console.log("Hashed CPassword", hashedCpassword);
-
- 
-    const administrator = await AdminReg.create({
-    
-        email,
-        password: hashedPassword,
-        confirmPassword: hashedCpassword
-    });
-    console.log(`AdminReg User created ${administrator}`);
-    if (administrator) {
-        resp.status(201).json({ _id: administrator.id, email: administrator.email });
-    }
-    else {
-        resp.status(400);
-        throw new Error("administrator data us not valid");
-    }
-
-
-
-    resp.status(200).json({ message: " Register the administrator" })
-});
-
-
-
-
-
-
-
-// @desc Login a user
-//@route POST/api/users/login
-//@access public
-
-
-const loginUser = asyncHandler(async (req, resp) => {
-    const { email, password } = req.body;
-    console.log("res   ",email,password)
+const AdminRegistion = async (req, res) => {
+  const { email, password } = req.body;
+  try {
     if (!email || !password) {
-        resp.status(400);
-        throw new Error("All fields are mandatory !");
+      return res.status(400).json({ message: "Please fill all the fields" });
     }
 
-    const administrator = await AdminReg.findOne({ email });
-    //compare password with hashedpassword
-    if (administrator && (await bcrypt.compare(password,administrator.password)))
-    {
-        const accessToken = jwt.sign(
-            {
-
-            userAdministrator:{
-           
-                email:administrator.email,
-                id: administrator.id,
-
-            },
-        },process.env.ACCESS_TOKEN_SECRET,
-         {
-expiresIn: "15m"  }
-        );
-
-        resp.status(200).json({accessToken});
-    }
-    else{
-        resp.status(401);
-        throw new Error("email or password is not valid")
+    const admin = await Admin.findOne({ email });
+    if (admin) {
+      return res.status(400).json({ message: "Admin already exists" });
     }
 
-        resp.json({ message: "login the admin" });
-});
+    const newAdmin = new Admin({ email, password });
+    const adminresp = await newAdmin.save();
 
+    res.status(201).json({
+      success: true,
+      message: "Admin registered successfully",
+      admin: adminresp,
+    });
+  } catch (error) {
+    return res.status(400).json({ message: error.message });
+  }
+};
 
-// @desc current  userinfo
-//@route POST/api/users/current
-//@access private
-
-
-const currentUser = asyncHandler(async (req, resp) => {
-    resp.json(req.userAdministrator);
-});
-
-const getAllEmployee=asyncHandler(async(req,res)=>{
-        const Employess=await EmployeeReg.find()
-
-        res.status(200).json(Employess)
-})
-
-const updatePasswordAndConfirmPassword = asyncHandler(async (req, res) => {
-    try {
-      const employee = await EmployeeReg.findOne({ employeeId: req.params.employeeId });
-  
-      if (!employee) {
-        return res.status(404).json({ error: "Employee not found" });
-      }
-  
-      const { password, confirmPassword, ...updateData } = req.body;
-  
-      // Hash and update password if provided
-      if (password) {
-        const hashedPassword = await bcrypt.hash(password, 10);
-        employee.password = hashedPassword;
-      }
-  
-      // Hash and update confirmPassword if provided
-      if (confirmPassword) {
-        const hashedConfirmPassword = await bcrypt.hash(confirmPassword, 10);
-        employee.confirmPassword = hashedConfirmPassword;
-      }
-  
-      // Update other fields if provided
-      for (let key in updateData) {
-        employee[key] = updateData[key];
-      }
-  
-      // Save the updated employee
-      const updatedEmployee = await employee.save();
-      res.status(200).json(updatedEmployee);
-    } catch (error) {
-      console.error("Error updating Employee Registration:", error);
-      res.status(500).json({ error: "An error occurred while updating the Employee Registration" });
+const AdminLogin = async (req, res) => {
+  const { email, password } = req.body;
+  try {
+    if (!email || !password) {
+      return res.status(400).json({ message: "Please fill all the fields" });
     }
-  });
-  
+    const admin = await Admin.findOne({ email });
+    if (!admin) {
+      return res.status(400).json({ message: "Admin not found" });
+    }
+    const isMatch = await admin.matchPassword(password);
+    if (!isMatch) {
+      return res.status(400).json({ message: "Invalid credentials" });
+    }
+    res.status(200).json({ message: "Admin logged in successfully" });
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
 
+const getAllAdmin = async (req, res) => {
+  try {
+    const admins = await Admin.find();
+    res.status(200).json(admins);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
 
-module.exports = { registerUser, loginUser, currentUser ,getAllEmployee ,updatePasswordAndConfirmPassword}
+const delAdminbyId = async (req, res) => {
+  try {
+    const { id } = req.params;
+    if (!id) {
+      return res.status(400).json({ message: "Admin id is required" });
+    }
+    await Admin.findByIdAndDelete(id);
+    res.status(200).json({ message: "Admin deleted" });
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
+
+module.exports = { AdminRegistion, AdminLogin, getAllAdmin, delAdminbyId };

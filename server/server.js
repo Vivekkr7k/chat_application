@@ -4,11 +4,14 @@ const dotenv = require("dotenv").config();
 const cors = require("cors");
 const mongoose = require("mongoose");
 const multer = require("multer"); // Import multer for handling file uploads
-const EmployeeRegistration = require("../server/src/model/employeeRegModel");
 const { uploadOnCloudinary } = require("../server/src/utils/cloudinary.js");
-const liveChat = require("./src/model/liveChatModel.js")
-
-
+const liveChat = require("./src/model/liveChatModel.js");
+const messageRouter = require("./src/routes/messageRoutes.js");
+const empAdminsenderRoutes = require("./src/routes/empadminsenderRouter.js");
+const adminRoutes = require("./src/routes/adminRegRoutes.js");
+const superAdminRoutes = require("./src/routes/superAdminRoutes.js");
+const managerRoutes = require("./src/routes/managerRoutes.js");
+const cookieParser = require("cookie-parser");
 connectDb(); // Call the function to connect to the database
 
 const app = express();
@@ -40,32 +43,33 @@ const ChatModel = mongoose.model("Chat", chatSchema);
 // Set up multer storage configuration for file uploads
 
 const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-      cb(null, "./public/temp")
-    },
-    filename: function (req, file, cb) {
-      cb(null, file.originalname)
-    }
-  })
-  
-
+  destination: function (req, file, cb) {
+    cb(null, "./public/temp");
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.originalname);
+  },
+});
 
 // Set up multer upload configuration
 const upload = multer({ storage: storage });
 
 // API endpoint to send a new message with image and document uploads
 // API endpoint to send a new message with optional image and document uploads
-app.post("/api/messages", upload.fields([{ name: 'image' }, { name: 'document' }, { name: 'video' }]), async (req, res) => {
-  try {
+app.post(
+  "/api/messages",
+  upload.fields([{ name: "image" }, { name: "document" }, { name: "video" }]),
+  async (req, res) => {
+    try {
       const { employeeId, message, group, grade } = req.body;
 
       // Find the chat room by group name and grade
       let chatRoom = await ChatModel.findOne({ group, grade });
 
       if (!chatRoom) {
-          return res.status(400).json({
-              error: `Chat room with group "${group}" and grade "${grade}" does not exist`,
-          });
+        return res.status(400).json({
+          error: `Chat room with group "${group}" and grade "${grade}" does not exist`,
+        });
       }
 
       // Check if image, document, and video files are provided
@@ -75,32 +79,47 @@ app.post("/api/messages", upload.fields([{ name: 'image' }, { name: 'document' }
 
       let imageUploadResult;
       if (hasImage) {
-          const imageLocalPath = req.files.image[0].path;
-          imageUploadResult = await uploadOnCloudinary(imageLocalPath);
-          if (!imageUploadResult || !imageUploadResult.url) {
-              console.error("Image upload failed:", imageUploadResult?.error || "Unknown error");
-              return res.status(400).json({ error: "Image upload failed. Please try again." });
-          }
+        const imageLocalPath = req.files.image[0].path;
+        imageUploadResult = await uploadOnCloudinary(imageLocalPath);
+        if (!imageUploadResult || !imageUploadResult.url) {
+          console.error(
+            "Image upload failed:",
+            imageUploadResult?.error || "Unknown error"
+          );
+          return res
+            .status(400)
+            .json({ error: "Image upload failed. Please try again." });
+        }
       }
 
       let documentUploadResult;
       if (hasDocument) {
-          const documentLocalPath = req.files.document[0].path;
-          documentUploadResult = await uploadOnCloudinary(documentLocalPath);
-          if (!documentUploadResult || !documentUploadResult.url) {
-              console.error("Document upload failed:", documentUploadResult?.error || "Unknown error");
-              return res.status(400).json({ error: "Document upload failed. Please try again." });
-          }
+        const documentLocalPath = req.files.document[0].path;
+        documentUploadResult = await uploadOnCloudinary(documentLocalPath);
+        if (!documentUploadResult || !documentUploadResult.url) {
+          console.error(
+            "Document upload failed:",
+            documentUploadResult?.error || "Unknown error"
+          );
+          return res
+            .status(400)
+            .json({ error: "Document upload failed. Please try again." });
+        }
       }
 
       let videoUploadResult;
       if (hasVideo) {
-          const videoLocalPath = req.files.video[0].path;
-          videoUploadResult = await uploadOnCloudinary(videoLocalPath);
-          if (!videoUploadResult || !videoUploadResult.url) {
-              console.error("Video upload failed:", videoUploadResult?.error || "Unknown error");
-              return res.status(400).json({ error: "Video upload failed. Please try again." });
-          }
+        const videoLocalPath = req.files.video[0].path;
+        videoUploadResult = await uploadOnCloudinary(videoLocalPath);
+        if (!videoUploadResult || !videoUploadResult.url) {
+          console.error(
+            "Video upload failed:",
+            videoUploadResult?.error || "Unknown error"
+          );
+          return res
+            .status(400)
+            .json({ error: "Video upload failed. Please try again." });
+        }
       }
 
       // console.log("11222222222221vidourl:",videoUploadResult.url);
@@ -108,30 +127,30 @@ app.post("/api/messages", upload.fields([{ name: 'image' }, { name: 'document' }
       // Add the new message to the chat room
       const messageData = { employeeId, message };
       if (hasImage) {
-          messageData.Image = imageUploadResult.url;
+        messageData.Image = imageUploadResult.url;
       }
       //  console.log(messageData.Image);
       //  console.log(hasImage)
-      const imageUrl=messageData.Image
+      const imageUrl = messageData.Image;
       if (hasDocument) {
-          messageData.Document = documentUploadResult.url;
+        messageData.Document = documentUploadResult.url;
       }
-      const documentUrl=messageData.Document
+      const documentUrl = messageData.Document;
       if (hasVideo) {
-          messageData.video = videoUploadResult.url;
+        messageData.video = videoUploadResult.url;
       }
-      const videoUrl=messageData.video
+      const videoUrl = messageData.video;
       // console.log(videoUrl);
       chatRoom.messages.push(messageData);
 
       const liveChats = new liveChat({
-          group: chatRoom.group,
-          grade: chatRoom.grade,
-          employeeId: employeeId,
-          messages: message,
-          image: imageUrl,
-          video: videoUrl ,
-          document: documentUrl,
+        group: chatRoom.group,
+        grade: chatRoom.grade,
+        employeeId: employeeId,
+        messages: message,
+        image: imageUrl,
+        video: videoUrl,
+        document: documentUrl,
       });
       // console.log(liveChats);
       await liveChats.save();
@@ -141,14 +160,12 @@ app.post("/api/messages", upload.fields([{ name: 'image' }, { name: 'document' }
       // console.log(chatRoom);
 
       res.status(201).json({ message: "Message sent successfully" });
-  } catch (error) {
+    } catch (error) {
       console.error("Error sending message:", error);
       res.status(500).json({ error: "Internal server error" });
+    }
   }
-});
-
-
-
+);
 
 // API endpoint to fetch chat messages for a specific group
 app.get("/api/messages", async (req, res) => {
@@ -184,7 +201,7 @@ app.post("/api/groups", async (req, res) => {
     }
 
     // Check if the group with the same name and grade already exists
-    const existingGroup = await ChatModel.findOne({ group:groupName, grade });
+    const existingGroup = await ChatModel.findOne({ group: groupName, grade });
     if (existingGroup) {
       return res.status(400).json({
         error: `Group with name "${group}" and grade "${grade}" already exists`,
@@ -192,7 +209,7 @@ app.post("/api/groups", async (req, res) => {
     }
 
     // Create a new group with the provided group name and grade
-    const newGroup = new ChatModel({ group:groupName, grade, messages: [] });
+    const newGroup = new ChatModel({ group: groupName, grade, messages: [] });
 
     // Save the new group to the database
     await newGroup.save();
@@ -216,26 +233,26 @@ app.post("/api/groups", async (req, res) => {
 //         if (err) {
 //           return res.status(400).json({ error: "Image upload failed" });
 //         }
-  
+
 //         // Handle document upload
 //         uploadDocument(req, res, async function (err) {
 //           if (err) {
 //             return res.status(400).json({ error: "Document upload failed" });
 //           }
-  
+
 //           const { employeeId, message, group, grade } = req.body;
-  
+
 //           console.log(employeeId, message, group, grade);
-  
+
 //           // Find the chat room by group name and grade
 //           let chatRoom = await ChatModel.findOne({ group, grade });
-  
+
 //           if (!chatRoom) {
 //             return res.status(400).json({
 //               error: `Chat room with group "${group}" and grade "${grade}" does not exist`,
 //             });
 //           }
-  
+
 //           // Check if image and document files are provided
 //           if (!req.file || !req.file.filename || !req.file.path || !req.file.originalname) {
 //             return res.status(400).json({ error: "Image file is required" });
@@ -243,13 +260,13 @@ app.post("/api/groups", async (req, res) => {
 //           if (!req.file || !req.file.filename || !req.file.path || !req.file.originalname) {
 //             return res.status(400).json({ error: "Document file is required" });
 //           }
-  
+
 //           const imageLocalPath = req.file.path;
 //           const documentLocalPath = req.file.path;
-  
+
 //           // Upload image to Cloudinary
 //           const imageUploadResult = await uploadOnCloudinary(imageLocalPath);
-  
+
 //           if (!imageUploadResult || !imageUploadResult.url) {
 //             console.error(
 //               "Image upload failed:",
@@ -259,10 +276,10 @@ app.post("/api/groups", async (req, res) => {
 //               .status(400)
 //               .json({ error: "Image upload failed. Please try again." });
 //           }
-  
+
 //           // Upload document to Cloudinary
 //           const documentUploadResult = await uploadOnCloudinary(documentLocalPath);
-  
+
 //           if (!documentUploadResult || !documentUploadResult.url) {
 //             console.error(
 //               "Document upload failed:",
@@ -272,13 +289,13 @@ app.post("/api/groups", async (req, res) => {
 //               .status(400)
 //               .json({ error: "Document upload failed. Please try again." });
 //           }
-  
+
 //           // Add the new message to the chat room
 //           chatRoom.messages.push({ employeeId, message, Image: imageUploadResult.url, Document: documentUploadResult.url });
-  
+
 //           // Save the updated chat room
 //           await chatRoom.save();
-  
+
 //           res.status(201).json({ message: "Message sent successfully" });
 //         });
 //       });
@@ -287,7 +304,7 @@ app.post("/api/groups", async (req, res) => {
 //       res.status(500).json({ error: "Internal server error" }); // Send 500 status code in case of error
 //     }
 //   });
-  
+
 // API endpoint to delete a group by group name and grade
 app.delete("/api/groups/:groupName/:grade", async (req, res) => {
   const { groupName, grade } = req.params;
@@ -351,7 +368,7 @@ app.get("/api/employeeDetails/:employeeId", async (req, res) => {
 // Endpoint to fetch messages based on group and grade
 app.get("/api/Emessages", async (req, res) => {
   let { teamName, grade } = req.query;
-//   console.log("Received query:", teamName, grade);
+  //   console.log("Received query:", teamName, grade);
   try {
     teamName = teamName.trim().toLowerCase();
     grade = grade.trim().toLowerCase();
@@ -369,42 +386,50 @@ app.get("/api/Emessages", async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 });
-app.get('/api/messages/last-24-hours', async (req, res) => {
-    try {
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
-        
-        const pipeline = [
-            {
-                $match: {
-                    createdAt: {
-                        $gte: today,
-                        $lt: new Date(today.getTime() + 24 * 60 * 60 * 1000)
-                    }
-                }
-            }
-        ];
+app.get("/api/messages/last-24-hours", async (req, res) => {
+  try {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
 
-        const messages = await liveChat.aggregate(pipeline);
-        
-        res.status(200).json(messages);
-    } catch (error) {
-        console.error('Error retrieving messages:', error);
-        res.status(500).json({ error: 'Error to getting the todays data from lib=veChats' });
-    }
+    const pipeline = [
+      {
+        $match: {
+          createdAt: {
+            $gte: today,
+            $lt: new Date(today.getTime() + 24 * 60 * 60 * 1000),
+          },
+        },
+      },
+    ];
+
+    const messages = await liveChat.aggregate(pipeline);
+
+    res.status(200).json(messages);
+  } catch (error) {
+    console.error("Error retrieving messages:", error);
+    res
+      .status(500)
+      .json({ error: "Error to getting the todays data from lib=veChats" });
+  }
 });
 
-
-
-
-
-
-
-
 // Mounting routes for admin and employee registration
-app.use("/api/adminRegistration", require("./src/routes/adminRegRoutes"));
 app.use("/api/employeeRegistration", require("./src/routes/employeeRegRoutes"));
 
+// one tp one chat
+app.use("/api", messageRouter);
+
+//empadmin sender routes
+
+app.use("/api/empadminsender", empAdminsenderRoutes);
+app.use("/api/admin", adminRoutes);
+app.use("/api/superAdmin", superAdminRoutes);
+app.use("/api/serverControl", require("./src/routes/serverControlRoutes.js"));
+app.use("/location", require("./src/routes/locationRoute.js"));
+app.use(cookieParser());
+
+// Routes
+app.use("/api/manager", managerRoutes);
 // Start the server
 app.listen(port, () => {
   console.log(`Server running on port no ${port}`);

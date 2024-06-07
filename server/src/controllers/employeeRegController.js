@@ -5,14 +5,35 @@ const EmployeReg = require("../model/employeeRegModel");
 const { json } = require("express");
 
 const registerEmployee = asyncHandler(async (req, res) => {
-  const { name, password, confirmPassword, employeeId, state, language, grade, group } = req.body;
+  const {
+    name,
+    password,
+    confirmPassword,
+    employeeId,
+    state,
+    language,
+    grade,
+    group,
+    // isManager,
+  } = req.body;
 
   if (password !== confirmPassword) {
-    return res.status(400).json({ error: "Password and confirm password do not match!" });
+    return res
+      .status(400)
+      .json({ error: "Password and confirm password do not match!" });
   }
 
   // Validate other mandatory fields
-  if (!name || !password || !confirmPassword  || !employeeId || !state || !grade || !group) {
+  if (
+    !name ||
+    !password ||
+    !confirmPassword ||
+    !employeeId ||
+    !state ||
+    !grade ||
+    !group
+    // !isManager
+  ) {
     return res.status(400).json({ error: "All fields are mandatoryyy!" });
   }
 
@@ -34,13 +55,13 @@ const registerEmployee = asyncHandler(async (req, res) => {
   const employeeRegistration = await EmployeReg.create({
     name,
     password: hashedPassword,
-    confirmPassword:hashedPassword,
+    confirmPassword: hashedPassword,
     employeeId,
     state,
     language,
     grade,
     group,
-   
+    // isManager,
   });
   console.log(employeeRegistration);
 
@@ -55,8 +76,13 @@ const loginUser = asyncHandler(async (req, res) => {
   }
 
   const employeeAvailable = await EmployeReg.findOne({ employeeId });
-  if (!employeeAvailable || !(await bcrypt.compare(password, employeeAvailable.password))) {
-    return res.status(401).json({ error: "Employee ID or password is not valid" });
+  if (
+    !employeeAvailable ||
+    !(await bcrypt.compare(password, employeeAvailable.password))
+  ) {
+    return res
+      .status(401)
+      .json({ error: "Employee ID or password is not valid" });
   }
 
   const accessToken = jwt.sign(
@@ -69,7 +95,11 @@ const loginUser = asyncHandler(async (req, res) => {
     { expiresIn: "15m" }
   );
 
-  res.status(200).json({ accessToken, employeeGrade: employeeAvailable.grade, employeeTeam: employeeAvailable.group });
+  res.status(200).json({
+    accessToken,
+    employeeGrade: employeeAvailable.grade,
+    employeeTeam: employeeAvailable.group,
+  });
 });
 
 const getAllEmployees = asyncHandler(async (req, res) => {
@@ -91,7 +121,10 @@ const updateEmployee = asyncHandler(async (req, res) => {
     return res.status(404).json({ error: "Employee not found" });
   }
 
-  res.status(200).json({ message: 'Employee details updated successfully', updatedEmployee });
+  res.status(200).json({
+    message: "Employee details updated successfully",
+    updatedEmployee,
+  });
 });
 
 const deleteEmployee = asyncHandler(async (req, res) => {
@@ -105,36 +138,62 @@ const deleteEmployee = asyncHandler(async (req, res) => {
 
   res.status(200).json({ message: "Employee deleted successfully" });
 });
-const getTotalMemberAccordingToGroup=asyncHandler(async(req,res)=>{
+const getTotalMemberAccordingToGroup = asyncHandler(async (req, res) => {
   try {
-    const data= await EmployeReg.aggregate([
+    const data = await EmployeReg.aggregate([
       {
         $match: {
-          grade: { $in: ['A', 'B', 'C'] },
-          group: { $in: ["Karnataka Team", "Andhra Pradesh Team", "Tamil Nadu Team", "Kerla Team", "Pondicherry Team"] }
-        }
+          grade: { $in: ["A", "B", "C"] },
+          group: {
+            $in: [
+              "Karnataka Team",
+              "Andhra Pradesh Team",
+              "Tamil Nadu Team",
+              "Kerla Team",
+              "Pondicherry Team",
+            ],
+          },
+        },
       },
       {
         $group: {
           _id: { group: "$group", grade: "$grade" },
-          totalMembers: { $sum: 1 }
-        }
+          totalMembers: { $sum: 1 },
+        },
       },
       {
         $project: {
           _id: 0,
           group: "$_id.group",
           grade: "$_id.grade",
-          totalMembers: 1
-        }
-      }
-    ])
-    res.status(201).json(data)
+          totalMembers: 1,
+        },
+      },
+    ]);
+    res.status(201).json(data);
   } catch (error) {
     console.error("Error to finding all data ", error);
-      res.status(500).json({ error: "Not fetching the all data " });
+    res.status(500).json({ error: "Not fetching the all data " });
   }
-})
+});
 
+const getEmployeeById = () => async (req, res) => {
+  const employee = await EmployeReg.findById(req.params.id);
 
-module.exports = { registerEmployee, loginUser, getAllEmployees, updateEmployee, deleteEmployee ,getTotalMemberAccordingToGroup };
+  if (employee) {
+    res.json(employee);
+  } else {
+    res.status(404);
+    throw new Error("Employee not found");
+  }
+};
+
+module.exports = {
+  registerEmployee,
+  loginUser,
+  getAllEmployees,
+  updateEmployee,
+  deleteEmployee,
+  getTotalMemberAccordingToGroup,
+  getEmployeeById,
+};
