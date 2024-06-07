@@ -1,6 +1,5 @@
 // controllers/messageController.js
 const MessageRes = require("../model/EmpAdminSenderModel.js");
-const { use } = require("../routes/messageRoutes.js");
 const { uploadOnCloudinary } = require("../utils/cloudinary.js");
 const { ObjectId } = require("mongodb");
 
@@ -149,37 +148,4 @@ const getAdminMessages = async (req, res) => {
   }
 };
 
-const getAllEmployee= async(req,res)=>{
-
-  try {
-    const user = await MessageRes.find();
-    if(!user){
-      res.status(400).json({ message: error.message|| "user is not exists" });
-    }
-
-    res.status(200).json(user,{message:"use fetch sucessfully",suceess:true});
-    
-  } catch (error) {
-    res.status(400).json({ message: error.message });
-    
-  }
-
-}
-const getAllEmployeeById= async(req,res)=>{
- const {id} = req.params
-  try {
-    const user = await MessageRes.findById({_id:id});
-    if(!user){
-      res.status(400).json({ message: error.message|| "user is not exists" });
-    }
-
-    res.status(200).json(user,{message:"use fetch sucessfully",suceess:true});
-    
-  } catch (error) {
-    res.status(400).json({ message: error.message });
-    
-  }
-
-}
-
-module.exports = { createMessage, getMessagesEmp, getAdminMessages,getAllEmployee,getAllEmployeeById };
+module.exports = { createMessage, getMessagesEmp, getAdminMessages };
