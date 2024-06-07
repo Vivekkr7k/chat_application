@@ -1,6 +1,5 @@
 // controllers/messageController.js
 const MessageRes = require("../model/EmpAdminSenderModel.js");
-const { use } = require("../routes/messageRoutes.js");
 const { uploadOnCloudinary } = require("../utils/cloudinary.js");
 const { ObjectId } = require("mongodb");
 
@@ -101,19 +100,19 @@ const getMessagesEmp = async (req, res) => {
   }
 
   try {
-    const oneMinuteAgo = new Date(Date.now() - 60 * 1000); // 1 minute in milliseconds
+    const twoHoursAgo = new Date(Date.now() - 2 * 60 * 60 * 1000); // 2 hours in milliseconds
 
     const messages = await MessageRes.find({
       $or: [
         {
           sender: userId1,
           recipient: userId2,
-          createdAt: { $gte: oneMinuteAgo },
+          createdAt: { $gte: twoHoursAgo },
         },
         {
           sender: userId2,
           recipient: userId1,
-          createdAt: { $gte: oneMinuteAgo },
+          createdAt: { $gte: twoHoursAgo },
         },
       ],
     }).sort({ createdAt: 1 });
@@ -149,37 +148,4 @@ const getAdminMessages = async (req, res) => {
   }
 };
 
-const getAllEmployee= async(req,res)=>{
-
-  try {
-    const user = await MessageRes.find();
-    if(!user){
-      res.status(400).json({ message: error.message|| "user is not exists" });
-    }
-
-    res.status(200).json(user,{message:"use fetch sucessfully",suceess:true});
-    
-  } catch (error) {
-    res.status(400).json({ message: error.message });
-    
-  }
-
-}
-const getAllEmployeeById= async(req,res)=>{
- const {id} = req.params
-  try {
-    const user = await MessageRes.findById({_id:id});
-    if(!user){
-      res.status(400).json({ message: error.message|| "user is not exists" });
-    }
-
-    res.status(200).json(user,{message:"use fetch sucessfully",suceess:true});
-    
-  } catch (error) {
-    res.status(400).json({ message: error.message });
-    
-  }
-
-}
-
-module.exports = { createMessage, getMessagesEmp, getAdminMessages,getAllEmployee,getAllEmployeeById };
+module.exports = { createMessage, getMessagesEmp, getAdminMessages };
