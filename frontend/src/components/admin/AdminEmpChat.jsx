@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { AiOutlineSearch } from "react-icons/ai";
-import FileUploadModel from "../employee/FileUploadModel";
 import { BiLogOut } from "react-icons/bi";
 import { Link } from "react-router-dom";
 import { IoIosDocument } from "react-icons/io";
+import AdminFileUploadModel from "./Pages/AdminFileUploadModel";
 
 function AdminEmpChat() {
   const [messages, setMessages] = useState([]);
@@ -14,8 +14,8 @@ function AdminEmpChat() {
   const [recipient, setRecipient] = useState("");
   const [recipientName, setRecipientName] = useState("");
   const [attachment, setAttachment] = useState(null);
-  const [userSearchQuery, setUserSearchQuery] = useState(""); 
-  const [adminSearchQuery, setAdminSearchQuery] = useState(""); 
+  const [userSearchQuery, setUserSearchQuery] = useState("");
+  const [adminSearchQuery, setAdminSearchQuery] = useState("");
   const messagesEndRef = useRef(null);
   const [admins, setAdmins] = useState([]);
   const [unreadUsers, setUnreadUsers] = useState([]);
@@ -252,7 +252,7 @@ function AdminEmpChat() {
                 className="w-full h-auto font-medium rounded-md bg-indigo-200 mb-4 text-2xl block items-center p-4 cursor-pointer"
                 onClick={() => handleClick(user._id, user.name)}
               >
-               <h1> {user.name}</h1>
+                <h1> {user.name}</h1>
 
                 {unreadUsers
                   .filter((unreadUser) => unreadUser.userId === user._id)
@@ -302,9 +302,13 @@ function AdminEmpChat() {
                 {message.content && message.content.text && (
                   <p className="text-sm">{message.content.text}</p>
                 )}
-                {message.content && message.content.image && (
-                  <img src={message.content.image} alt="Image" className="max-w-xs" />
+                {message.content.image && (
+                  <>
+                    <img src={message.content.image} alt="Image" className="max-w-xs rounded" />
+
+                  </>
                 )}
+
                 {message.content && message.content.document && (
                   <a
                     href={message.content.document}
@@ -350,7 +354,7 @@ function AdminEmpChat() {
           >
             Send
           </button>
-          <FileUploadModel sender={loggedInUserId} recipient={recipient} />
+          <AdminFileUploadModel sender={loggedInUserId} recipient={recipient} />
         </div>
       </div>
     </div>

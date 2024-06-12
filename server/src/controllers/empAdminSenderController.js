@@ -3,6 +3,7 @@ const MessageRes = require("../model/EmpAdminSenderModel.js");
 const { use } = require("../routes/messageRoutes.js");
 const { uploadOnCloudinary } = require("../utils/cloudinary.js");
 const { ObjectId } = require("mongodb");
+const fs = require('fs');
 
 const createMessage = async (req, res) => {
   const { sender, recipient, text } = req.body;
