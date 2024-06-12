@@ -141,6 +141,9 @@ function AdminEmpChat() {
         }
       };
       fetchUnreadMessages();
+      const intervalId = setInterval(fetchUnreadMessages, 30 * 1000);
+      return () => clearInterval(intervalId);
+
     }
   }, [users]);
 
@@ -161,7 +164,17 @@ function AdminEmpChat() {
           console.error(error);
         }
       };
+
+      // Fetch messages immediately
       fetchUnreadMessages();
+
+
+
+      // Set interval to fetch messages every minute
+      const intervalId = setInterval(fetchUnreadMessages, 30 * 1000);
+
+      // Clear interval on component unmount
+      return () => clearInterval(intervalId);
     }
   }, [admins]);
 

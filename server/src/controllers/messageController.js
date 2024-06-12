@@ -134,9 +134,9 @@ const unreadMessages = async (req, res) => {
 const markMessagesRead = async (req, res) => {  
   const userId = req.params.userId;
   try {
-    console.log(`Received userId: ${userId}`);
+    // console.log(`Received userId: ${userId}`);
     const recipientObjectId = new ObjectId(userId);
-    console.log(`Converted to ObjectId: ${recipientObjectId}`);
+    // console.log(`Converted to ObjectId: ${recipientObjectId}`);
 
     const result = await Message.aggregate([
       {
@@ -154,11 +154,9 @@ const markMessagesRead = async (req, res) => {
       }
     ]);
 
-    if (result.length === 0) {
-      console.log('No matching messages found.');
-    } else {
-      console.log('Matching messages found:', result);
-    }
+    // if (result.length === 0) {
+    //   console.log('No matching messages found.');
+    // } 
 
     res.json(result);
   } catch (error) {

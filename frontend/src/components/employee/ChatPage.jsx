@@ -137,6 +137,8 @@ function ChatPage() {
         }
       };
       fetchUnreadMessages();
+      const intervalId = setInterval(fetchUnreadMessages, 30 * 1000);
+      return () => clearInterval(intervalId);
     }
   }, [users]);
 
