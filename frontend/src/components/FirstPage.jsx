@@ -13,12 +13,14 @@ const FirstPage = () => {
     navigate('/login');
   };
 
-  const handleSuperAdminLogin = () => {
-    navigate('/superAdminLogin')
-  }
   const handleManagerLogin = () => {
-    navigate('/managerLogin')
-  }
+    navigate('/managerLogin');
+  };
+  
+  const handleBillingTeamManagerLogin = () => {
+    navigate('/BillingTeamManagerLogin');
+  };
+
   return (
     <div className="relative min-h-screen flex items-center justify-center bg-[#824ece] overflow-hidden">
       {/* Bubble Design */}
@@ -28,9 +30,9 @@ const FirstPage = () => {
       <div className="absolute bg-pink-600 rounded-full w-20 h-20 sm:w-28 sm:h-28 bottom-20 sm:bottom-40 right-20 sm:right-40 opacity-50"></div>
       <div className="absolute bg-purple-500 rounded-full w-16 h-16 sm:w-20 sm:h-20 bottom-5 sm:bottom-10 left-10 sm:left-20 opacity-50"></div>
 
-      <div className="bg-white rounded-lg shadow-lg overflow-hidden flex flex-col lg:flex-row-reverse w-11/12 sm:w-3/4 h-auto lg:h-96 max-w-4xl">
+      <div className="bg-white rounded-lg shadow-lg overflow-hidden flex flex-col lg:flex-row-reverse w-11/12 sm:w-3/4 lg:w-5/6 xl:w-4/5 h-auto lg:min-h-[36rem] max-w-6xl">
         <div className="w-full lg:w-2/3 bg-gradient-to-r from-purple-600 to-pink-600 p-8 sm:p-12 flex flex-col justify-center items-center relative">
-          <h2 className="text-white text-3xl sm:text-4xl mb-2 leading-relaxed leading-relaxed">Welcome to our <span className="font-extrabold text-3xl sm:text-6xl "><br></br>Attic Chat Application</span></h2>
+          <h2 className="text-white text-3xl sm:text-4xl mb-2 leading-relaxed">Welcome to our <span className="font-extrabold text-3xl sm:text-6xl "><br />Attic's WhatsApp</span></h2>
           
           {/* Additional Bubbles for the right section */}
           <div className="absolute bg-purple-700 rounded-full w-12 h-12 sm:w-16 sm:h-16 top-5 sm:top-10 right-5 sm:right-10 opacity-50"></div>
@@ -43,7 +45,7 @@ const FirstPage = () => {
             </div>
           </div>
           <p className="text-lg sm:text-2xl text-[#5816bc] not-italic text-center mt-4 lg:mt-0">Login to access your account as !</p>
-          <div className="flex flex-row items-center justify-center gap-4 mt-4">
+          <div className="flex flex-wrap items-center justify-center gap-4 mt-4">
             <button
               className="bg-purple-500 hover:bg-purple-700 text-white font-bold text-md sm:text-xl py-2 sm:py-4 px-5 sm:px-7 rounded-2xl focus:outline-none focus:shadow-outline transition-all duration-200 transform hover:scale-110"
               onClick={handleAdminLogin}
@@ -58,15 +60,63 @@ const FirstPage = () => {
             </button>
             <button
               className="bg-purple-500 hover:bg-purple-700 text-white font-bold text-md sm:text-xl py-2 sm:py-4 px-4 sm:px-4 rounded-2xl focus:outline-none focus:shadow-outline transition-all duration-200 transform hover:scale-110"
-              onClick={handleSuperAdminLogin}
-            >
-              Super Admin
-            </button>
-            <button
-              className="bg-purple-500 hover:bg-purple-700 text-white font-bold text-md sm:text-xl py-2 sm:py-4 px-4 sm:px-4 rounded-2xl focus:outline-none focus:shadow-outline transition-all duration-200 transform hover:scale-110"
               onClick={handleManagerLogin}
             >
               Manager
+            </button>
+            <button
+              className="bg-purple-500 hover:bg-purple-700 text-white font-bold text-md sm:text-xl py-2 sm:py-4 px-4 sm:px-4 rounded-2xl focus:outline-none focus:shadow-outline transition-all duration-200 transform hover:scale-110"
+              onClick={handleBillingTeamManagerLogin}
+            >
+             Billing Team Manager
+            </button>
+            <button
+              className="bg-purple-500 hover:bg-purple-700 text-white font-bold text-md sm:text-xl py-2 sm:py-4 px-4 sm:px-4 rounded-2xl focus:outline-none focus:shadow-outline transition-all duration-200 transform hover:scale-110"
+              // onClick={handleBillingTeamManagerLogin}
+            >
+             Accounts
+            </button>
+            <button
+              className="bg-purple-500 hover:bg-purple-700 text-white font-bold text-md sm:text-xl py-2 sm:py-4 px-4 sm:px-4 rounded-2xl focus:outline-none focus:shadow-outline transition-all duration-200 transform hover:scale-110"
+              // onClick={handleBillingTeamManagerLogin}
+            >
+             Software
+            </button>
+            <button
+              className="bg-purple-500 hover:bg-purple-700 text-white font-bold text-md sm:text-xl py-2 sm:py-4 px-4 sm:px-4 rounded-2xl focus:outline-none focus:shadow-outline transition-all duration-200 transform hover:scale-110"
+              // onClick={handleBillingTeamManagerLogin}
+            >
+              HR
+            </button>
+            <button
+              className="bg-purple-500 hover:bg-purple-700 text-white font-bold text-md sm:text-xl py-2 sm:py-4 px-4 sm:px-4 rounded-2xl focus:outline-none focus:shadow-outline transition-all duration-200 transform hover:scale-110"
+              // onClick={handleBillingTeamManagerLogin}
+            >
+              Call Center
+            </button>
+            <button
+              className="bg-purple-500 hover:bg-purple-700 text-white font-bold text-md sm:text-xl py-2 sm:py-4 px-4 sm:px-4 rounded-2xl focus:outline-none focus:shadow-outline transition-all duration-200 transform hover:scale-110"
+              // onClick={handleBillingTeamManagerLogin}
+            >
+             Virtual Team
+            </button>
+            <button
+              className="bg-purple-500 hover:bg-purple-700 text-white font-bold text-md sm:text-xl py-2 sm:py-4 px-4 sm:px-4 rounded-2xl focus:outline-none focus:shadow-outline transition-all duration-200 transform hover:scale-110"
+              // onClick={handleBillingTeamManagerLogin}
+            >
+             Monitoring Team
+            </button>
+            <button
+              className="bg-purple-500 hover:bg-purple-700 text-white font-bold text-md sm:text-xl py-2 sm:py-4 px-4 sm:px-4 rounded-2xl focus:outline-none focus:shadow-outline transition-all duration-200 transform hover:scale-110"
+              // onClick={handleBillingTeamManagerLogin}
+            >
+             Bouncers/Drivers
+            </button>
+            <button
+              className="bg-purple-500 hover:bg-purple-700 text-white font-bold text-md sm:text-xl py-2 sm:py-4 px-4 sm:px-4 rounded-2xl focus:outline-none focus:shadow-outline transition-all duration-200 transform hover:scale-110"
+              // onClick={handleBillingTeamManagerLogin}
+            >
+             Security/CCTV
             </button>
           </div>
         </div>

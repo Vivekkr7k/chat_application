@@ -14,7 +14,6 @@ const registerEmployee = asyncHandler(async (req, res) => {
     language,
     grade,
     group,
-    // isManager,
   } = req.body;
 
   if (password !== confirmPassword) {
@@ -32,7 +31,6 @@ const registerEmployee = asyncHandler(async (req, res) => {
     !state ||
     !grade ||
     !group
-    // !isManager
   ) {
     return res.status(400).json({ error: "All fields are mandatoryyy!" });
   }
@@ -61,7 +59,6 @@ const registerEmployee = asyncHandler(async (req, res) => {
     language,
     grade,
     group,
-    // isManager,
   });
   console.log(employeeRegistration);
 
@@ -99,6 +96,7 @@ const loginUser = asyncHandler(async (req, res) => {
     accessToken,
     employeeGrade: employeeAvailable.grade,
     employeeTeam: employeeAvailable.group,
+    _id:employeeAvailable._id,
   });
 });
 

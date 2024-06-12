@@ -1,99 +1,120 @@
-// BillingRegistrationModal.js
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import Sidebar from './Sidebar';
+import BillingTeamDetails from "../BillingTeam/BillingTeamDetails";
 
-import React, { useState } from 'react';
+const BillingRegistrationModal = () => {
+  const navigate = useNavigate();
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    password: "",
+    phone: "",
+    address: "",
+    branch_name: "",
+    branch_state: "",
+    branch_city: "",
+    branch_pincode: "",
+  });
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [error, setError] = useState(null); // For displaying errors
 
-const BillingRegistrationModal = ({ closeModal }) => {
-    const [formData, setFormData] = useState({
-        name: '',
-        email: '',
-        // Add more fields as needed
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
     });
+  };
 
-    const handleChange = (e) => {
-        setFormData({
-            ...formData,
-            [e.target.name]: e.target.value
-        });
-    };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await fetch("http://localhost:5001/api/billingTeam/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        // Handle form submission here
-        console.log(formData);
-        // You can send the form data to the backend or perform any other action
-        // Don't forget to close the modal after successful submission
-        closeModal();
-    };
+      if (response.ok) {
+        console.log("Registration successful");
+        setIsModalOpen(false); // Close the modal on successful registration
+        navigate("/BillingTeamDetails");
+      } else {
+        console.error("Registration failed");
+      }
+    } catch (error) {
+      console.error("An error occurred:", error);
+    }
+  };
 
-    return (
-        <div className="fixed z-10 inset-0 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-            <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-                <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
-                <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
-                <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
-                    <form onSubmit={handleSubmit}>
-                        <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                            <div className="sm:flex sm:items-start">
-                                <div className="w-full">
-                                    <h3 className="text-lg leading-6 font-medium text-gray-900" id="modal-title">
-                                        Register for Billing Team
-                                    </h3>
-                                    <div className="mt-2">
-                                        <div className="mb-4">
-                                            <label htmlFor="name" className="block text-sm font-medium text-gray-700">
-                                                Name
-                                            </label>
-                                            <input
-                                                type="text"
-                                                name="name"
-                                                id="name"
-                                                autoComplete="given-name"
-                                                required
-                                                className="mt-1 p-3 w-full border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 shadow-sm"
-                                                value={formData.name}
-                                                onChange={handleChange}
-                                            />
-                                        </div>
-                                        <div className="mb-4">
-                                            <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                                                Email
-                                            </label>
-                                            <input
-                                                type="email"
-                                                name="email"
-                                                id="email"
-                                                autoComplete="email"
-                                                required
-                                                className="mt-1 p-3 w-full border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 shadow-sm"
-                                                value={formData.email}
-                                                onChange={handleChange}
-                                            />
-                                        </div>
-                                        {/* Add more fields as needed */}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                            <button
-                                type="submit"
-                                className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm"
-                            >
-                                Register
-                            </button>
-                            <button
-                                type="button"
-                                onClick={closeModal}
-                                className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
-                            >
-                                Cancel
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </div>
+  return (
+    <div className="lg:flex block">
+      <Sidebar />
+      <div className="flex-1 p-6">
+        <div className="flex items-center mb-4 flex-col">
+          <button
+            onClick={() => setIsModalOpen(true)}
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded h-8 mr-2"
+          >
+            Open Billing Registration Form
+          </button>
+          <BillingTeamDetails/>
         </div>
-    );
+        {isModalOpen && (
+          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+            <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 w-full max-w-lg mx-2 sm:mx-4 md:mx-6 lg:mx-auto xl:mx-auto">
+              <h2 className="text-2xl font-bold mb-4">Register for Billing Team</h2>
+              {error && <div className="text-red-500 mb-4">{error}</div>}
+              <form onSubmit={handleSubmit} className="w-full">
+                {[
+                  { label: 'Name', name: 'name', type: 'text' },
+                  { label: 'Email', name: 'email', type: 'email' },
+                  { label: 'Password', name: 'password', type: 'password' },
+                  { label: 'Phone', name: 'phone', type: 'text' },
+                  { label: 'Address', name: 'address', type: 'text' },
+                  { label: 'Branch Name', name: 'branch_name', type: 'text' },
+                  { label: 'Branch State', name: 'branch_state', type: 'text' },
+                  { label: 'Branch City', name: 'branch_city', type: 'text' },
+                  { label: 'Branch Pincode', name: 'branch_pincode', type: 'text' },
+                ].map((field, index) => (
+                  <div className="mb-4" key={index}>
+                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor={field.name}>
+                      {field.label}
+                    </label>
+                    <input
+                      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                      id={field.name} // Ensure id is unique
+                      type={field.type}
+                      name={field.name}
+                      value={formData[field.name]}
+                      onChange={handleChange}
+                    />
+                  </div>
+                ))}
+                <div className="flex items-center justify-between">
+                  <button
+                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                    type="submit"
+                  >
+                    Register
+                  </button>
+                  <button
+                    onClick={() => setIsModalOpen(false)}
+                    className="ml-4 bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                    type="button"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
 };
 
 export default BillingRegistrationModal;

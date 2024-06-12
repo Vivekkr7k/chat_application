@@ -98,11 +98,13 @@ const loginManager = async (req, res) => {
       maxAge: 15 * 60 * 1000,
     });
 
-    res
-      .status(200)
-      .json(accessToken, { message: "Manager logged in successfully" });
+    return res.status(200).json({
+      id: manager._id,
+      accessToken,
+      message: "Manager logged in successfully"
+    });
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    return res.status(400).json({ message: error.message });
   }
 };
 

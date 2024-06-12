@@ -2,17 +2,22 @@
 
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from "react-router-dom";
 
 const ManagerLogin = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
-
+    const navigate = useNavigate()
     const handleLogin = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post('http://localhost:5000/manager/login', { email, password });
+            const response = await axios.post('http://localhost:5001/api/manager/login', { manager_email:email, manager_password:password });
             console.log(response.data);
+            localStorage.setItem("CurrentUserId",response.data.id)
+            localStorage.setItem("token",response.data.accessToken)
+            localStorage.setItem("email",email)
+            navigate("/managerChat")
             // Handle successful login (e.g., redirect to dashboard)
         } catch (error) {
             setError(error.response.data.message);

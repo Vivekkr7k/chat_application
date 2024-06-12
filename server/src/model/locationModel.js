@@ -6,9 +6,11 @@ const locationSchema = new mongoose.Schema({
     required: true,
     ref: "Manager",
   },
-  longitude: { type: Number, required: true },
-  latitude: { type: Number, required: true },
-  timestamp: { type: Date, default: Date.now },
+  locations: [{
+    longitude: { type: Number, required: true },
+    latitude: { type: Number, required: true },
+    timestamp: { type: Date, default: Date.now }
+  }]
 });
 
 const Location = mongoose.model("Location", locationSchema);

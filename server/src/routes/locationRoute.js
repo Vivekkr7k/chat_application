@@ -1,8 +1,9 @@
+// locationRoutes.js
 const express = require("express");
 const router = express.Router();
-const { saveLocation } = require("../controllers/locationController");
+const { saveLocation,getLocation } = require("../controllers/locationController");
 
 // Save location
-router.post("/location", saveLocation);
-
+router.post("/", saveLocation);
+router.get("/get/:id", getLocation);
 module.exports = router;

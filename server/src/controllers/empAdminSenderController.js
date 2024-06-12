@@ -1,5 +1,6 @@
 // controllers/messageController.js
 const MessageRes = require("../model/EmpAdminSenderModel.js");
+const { use } = require("../routes/messageRoutes.js");
 const { uploadOnCloudinary } = require("../utils/cloudinary.js");
 const { ObjectId } = require("mongodb");
 
@@ -122,7 +123,6 @@ const getMessagesEmp = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
-
 const getAdminMessages = async (req, res) => {
   const { userId1, userId2 } = req.params;
 
@@ -148,4 +148,113 @@ const getAdminMessages = async (req, res) => {
   }
 };
 
-module.exports = { createMessage, getMessagesEmp, getAdminMessages };
+const getAllEmployee= async(req,res)=>{
+
+  try {
+    const user = await MessageRes.find();
+    if(!user){
+      res.status(400).json({ message: error.message|| "user is not exists" });
+    }
+
+    res.status(200).json(user,{message:"use fetch sucessfully",suceess:true});
+    
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+    
+  }
+
+}
+const getAllEmployeeById= async(req,res)=>{
+ const {id} = req.params
+  try {
+    const user = await MessageRes.findById({_id:id});
+    if(!user){
+      res.status(400).json({ message: error.message|| "user is not exists" });
+    }
+
+    res.status(200).json(user,{message:"use fetch sucessfully",suceess:true});
+    
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+    
+  }
+
+}
+
+const markMessagesRead = async (req, res) => {  
+  const userId = req.params.userId;
+  try {
+    console.log(`Received userId: ${userId}`);
+    const recipientObjectId = new ObjectId(userId);
+    console.log(`Converted to ObjectId: ${recipientObjectId}`);
+
+    const result = await MessageRes.aggregate([
+      {
+        $match: {
+          recipient: recipientObjectId,  
+        }
+      },
+      {
+        $sort: {
+          updatedAt: -1  // Sort by updatedAt in descending order
+        }
+      },
+      {
+        $limit: 1  // Limit the result to one document
+      }
+    ]);
+
+    if (result.length === 0) {
+      console.log('No matching messages found.');
+    } else {
+      console.log('Matching messages found:', result);
+    }
+
+    res.json(result);
+  } catch (error) {
+    console.error('Error occurred:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+const markMessagesReadEmp = async (req, res) => {
+  const userId = req.params.userId;
+  try {
+    console.log(`Received userId: ${userId}`);
+    const recipientObjectId = new ObjectId(userId);
+    console.log(`Converted to ObjectId: ${recipientObjectId}`);
+
+    const twoHoursAgo = new Date(Date.now() - 2 * 60 * 60 * 1000); // 2 hours in milliseconds
+
+    const result = await MessageRes.aggregate([
+      {
+        $match: {
+          recipient: recipientObjectId,
+          createdAt: { $gte: twoHoursAgo }
+        }
+      },
+      {
+        $sort: {
+          updatedAt: -1  // Sort by updatedAt in descending order
+        }
+      },
+      {
+        $limit: 1  // Limit the result to one document
+      }
+    ]);
+
+    if (result.length === 0) {
+      console.log('No matching messages found.');
+    } else {
+      console.log('Matching messages found:', result);
+    }
+
+    res.json(result);
+  } catch (error) {
+    console.error('Error occurred:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+
+module.exports = { createMessage, getMessagesEmp, getAdminMessages,getAllEmployee,getAllEmployeeById ,markMessagesRead,markMessagesReadEmp };

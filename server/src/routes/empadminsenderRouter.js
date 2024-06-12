@@ -5,6 +5,8 @@ const {
   createMessage,
   getMessagesEmp,
   getAdminMessages,
+  markMessagesRead,
+  markMessagesReadEmp
 } = require("../controllers/empAdminSenderController.js");
 
 const { upload } = require("../middleware/multer.middlewear.js");
@@ -23,5 +25,9 @@ router.get("/getmessages/:userId1/:userId2", getMessagesEmp);
 
 // Get messages between two users
 router.get("/getadminmessages/:userId1/:userId2", getAdminMessages);
+
+router.get("/mark-messages-read/:userId", markMessagesRead);
+
+router.get("/mark-messages-read-emp/:userId", markMessagesReadEmp);
 
 module.exports = router;

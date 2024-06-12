@@ -59,10 +59,6 @@ const employeeRegSchema = mongoose.Schema(
       type: Boolean,
       default: false,
     },
-    // isManager: {
-    //   type: Boolean,
-    //   default: false,
-    // },
   },
   {
     timestamp: true,

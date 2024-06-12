@@ -4,6 +4,8 @@ const {
   createMessage,
   getMessages,
   deleteMessage,
+  unreadMessages,
+  markMessagesRead,
 } = require("../controllers/messageController.js");
 const { upload } = require("../middleware/multer.middlewear.js");
 // Adjust the path as necessary
@@ -14,6 +16,9 @@ const result = upload.fields([
 ]);
 router.post("/postmessages", result, createMessage);
 router.get("/getmessages/:userId1/:userId2", getMessages);
+router.get('/unread-messages/:userId', unreadMessages);
+router.get('/mark-messages-read/:userId', markMessagesRead);
+
 
 router.delete("/delmessages/:id", deleteMessage);
 

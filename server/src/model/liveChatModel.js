@@ -1,38 +1,36 @@
-const mongoose=require("mongoose")
+const mongoose = require("mongoose");
 
-const liveChatSchema=mongoose.Schema({
-    group:{
-        type:"String",
-        default:''
+const liveChatSchema = mongoose.Schema({
+    group: {
+        type: String,
+        default: ''
     },
-    grade:{
-        type:"String",
-        default:''
+    grade: {
+        type: String,
+        default: ''
     },
-    employeeId:{
-        type:"String",
-        default:''
+    employeeId: {
+        type: String,
+        default: ''
     },
-    messages:{
-        type:"String",
-        default:''
+    messages: {
+        type: String,
+        default: ''
     },
-    image:{
-        type:"String",
-        default:''
+    image: {
+        type: String,
+        default: ''
     },
-    video:{
-        type:"String",
-        default:''
+    video: {
+        type: String,
+        default: ''
     },
-    document:{
-        type:"String",
-        default:''
+    document: {
+        type: String,
+        default: ''
     }
-},{
-    timestamps:true
-})
+}, {
+    timestamps: true
+});
 
-
-
-module.exports = mongoose.model("liveChat",liveChatSchema);
+module.exports = mongoose.model("liveChat", liveChatSchema);

@@ -39,7 +39,7 @@ const AdminLogin = async (req, res) => {
     if (!isMatch) {
       return res.status(400).json({ message: "Invalid credentials" });
     }
-    res.status(200).json({ message: "Admin logged in successfully" });
+    res.status(200).json({ message: "Admin logged in successfully" ,data:admin });
   } catch (error) {
     res.status(400).json({ message: error.message });
   }

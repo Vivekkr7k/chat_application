@@ -37,7 +37,7 @@ const Modal = ({ show, onClose, employee, onUpdate }) => {
               onChange={handleChange}
             />
           </div>
-          <div className="mb-4">
+          {/* <div className="mb-4">
             <label className="block text-gray-700 text-sm font-bold mb-2">Employee ID</label>
             <input
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700"
@@ -45,7 +45,7 @@ const Modal = ({ show, onClose, employee, onUpdate }) => {
               value={formData.employeeId}
               onChange={handleChange}
             />
-          </div>
+          </div> */}
           <div className="mb-4">
             <label className="block text-gray-700 text-sm font-bold mb-2">State</label>
             <input

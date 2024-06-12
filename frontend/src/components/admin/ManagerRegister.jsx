@@ -14,13 +14,7 @@ const ManagerRegister = () => {
   };
 
   return (
-    <div>
-      {/* <Sidebar /> */}
-      <div className="container mx-auto mt-10 flex flex-col items-center">
-        <button onClick={openModal} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-4">
-          Register Manager
-        </button>
-      </div>
+    <div>     
       <ManagerRegisterModal isOpen={isModalOpen} onClose={closeModal} />
     </div>
   );
