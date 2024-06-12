@@ -333,7 +333,45 @@ app.get('/api/messages/last-24-hours', async (req, res) => {
   }
 });
 
-app.get('/api/messages/mark-messages-read/:userId', async (req, res) => {})
+app.get('/api/groups/mark-messages-read/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    const result = await ChatModel.aggregate([
+      {
+        $match: {
+          _id: new mongoose.Types.ObjectId(id)  // Match by group _id
+        }
+      },
+      {
+        $unwind: "$messages"  // Unwind the messages array
+      },
+      {
+        $sort: {
+          "messages._id": -1  // Sort messages by their _id in descending order
+        }
+      },
+      {
+        $limit: 1  // Limit the result to one message
+      },
+      {
+        $project: {
+          _id: 0,
+          lastMessage: "$messages"  // Project the last message
+        }
+      }
+    ]);
+
+    if (result.length === 0) {
+      res.status(404).json({ message: 'No messages found for this group.' });
+    } else {
+      res.json(result[0].lastMessage);
+    }
+  } catch (error) {
+    console.error('Error occurred:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 
 
 // Mounting routes for admin and employee registration
