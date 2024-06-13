@@ -257,11 +257,12 @@ app.get("/api/groups", async (req, res) => {
           _id: { group: "$group", grade: "$grade" },
           group: { $first: "$group" },
           grade: { $first: "$grade" },
+          documentId: { $first: "$_id" }
         },
       },
       {
         $project: {
-          _id: 0,
+          _id: "$documentId",
           group: 1,
           grade: 1,
         },

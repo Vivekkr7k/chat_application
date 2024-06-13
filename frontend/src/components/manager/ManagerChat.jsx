@@ -120,7 +120,7 @@ function ManagerChat() {
         }
       };
       fetchUnreadMessages();
-      const intervalId = setInterval(fetchUnreadMessages, 30 * 1000);
+      const intervalId = setInterval(fetchUnreadMessages, 3 * 1000);
       return () => clearInterval(intervalId);
     }
   }, [users]);

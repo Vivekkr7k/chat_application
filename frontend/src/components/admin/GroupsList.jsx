@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Message from './Message';
 import { RiDeleteBinLine } from "react-icons/ri";
+import axios from 'axios';
 
 const GroupsList = () => {
   const [groups, setGroups] = useState([]);
@@ -10,6 +11,8 @@ const GroupsList = () => {
   const [showModal, setShowModal] = useState(false);
   const [newGroupName, setNewGroupName] = useState("");
   const [grade, setGrade] = useState("A");
+  const [unreadMessages, setUnreadMessages] = useState([]);
+  const [showMessages, setShowMessages] = useState({});
 
   const navigate = useNavigate();
 
@@ -35,8 +38,7 @@ const GroupsList = () => {
     setSelectedGroupName(groupName);
     setSelectedGrade(groupGrade);
 
-    // Check screen size and navigate if small screen
-    if (window.innerWidth < 1024) { // Adjust the width as needed for your breakpoint
+    if (window.innerWidth < 1024) {
       navigate(`/message/${encodeURIComponent(groupName)}/${encodeURIComponent(groupGrade)}`);
     }
   };
@@ -108,6 +110,39 @@ const GroupsList = () => {
     }
   };
 
+  useEffect(() => {
+    if (groups.length > 0) {
+      const fetchUnreadMessages = async () => {
+        try {
+          const unreadMessagesData = await Promise.all(
+            groups.map(async (group) => {
+              const response = await axios.get(
+                `http://localhost:5001/api/empadminsender/mark-messages-read/${group._id}`
+              );
+              return { groupId: group._id, data: response.data };
+            })
+          );
+          setUnreadMessages(unreadMessagesData);
+        } catch (error) {
+          console.error(error);
+        }
+      };
+
+      fetchUnreadMessages();
+
+      const intervalId = setInterval(fetchUnreadMessages, 30 * 1000);
+
+      return () => clearInterval(intervalId);
+    }
+  }, [groups]);
+
+  const handleShowMessage = (userId) => {
+    setShowMessages((prevShowMessages) => ({
+      ...prevShowMessages,
+      [userId]: !prevShowMessages[userId],
+    }));
+  };
+
   return (
     <div className="flex flex-col lg:flex-row h-screen">
       <div className="flex flex-col w-full lg:w-[24vw] bg-[#ffffff] text-[#5443c3] border shadow shadow-blue-500/65">
@@ -121,15 +156,38 @@ const GroupsList = () => {
           </button>
         </div>
         <div className="overflow-y-auto mt-8">
-          {groups.map((group, index) => (
+          {groups.map((group) => (
             <div 
-              key={index} 
+              key={group._id} 
               className="p-4 cursor-pointer text-[#5443c3] hover:bg-[#eef2fa] flex justify-between items-center"
               onClick={() => handleGroupClick(group.group, group.grade)}
             >
               <div>
                 <h1 className="text-lg font-bold text-[#5443c3]">{group.group}</h1>
                 <p className="text-[#8b7ed5]">Grade: {group.grade}</p>
+                {unreadMessages
+                  .filter((unreadGroup) => unreadGroup.groupId === group._id)
+                  .flatMap((unreadGroup) =>
+                    unreadGroup.data.map((message) => (
+                      <div
+                        key={message._id}
+                        className="text-green-400 flex justify-between items-center content-center gap-5"
+                        onClick={() => handleShowMessage(message._id)}
+                      >
+                        {!showMessages[message._id] ? (
+                          <>
+                            <p className="pe-2 text-base">{message.message}</p>
+                            <p className="text-xs text-black">
+                              {new Date(message.createdAt).toLocaleDateString()}{" "}
+                              {new Date(message.createdAt).toLocaleTimeString()}
+                            </p>
+                          </>
+                        ) : (
+                          <p></p>
+                        )}
+                      </div>
+                    ))
+                  )}
               </div>
               <button 
                 className="text-red-400 hover:text-red-600 text-2xl"
