@@ -4,6 +4,7 @@ import { IoMdSend } from "react-icons/io";
 import { IoMdDocument } from "react-icons/io";
 import UploadImageModal from "./Pages/UploadImageModal";
 import { useParams } from "react-router-dom";
+import { IoArrowBack } from "react-icons/io5";
 
 const Message = ({ selectedGroupName: propsGroupName, selectedGrade: propsGrade }) => {
   const [message, setMessage] = useState("");
@@ -132,6 +133,7 @@ const Message = ({ selectedGroupName: propsGroupName, selectedGrade: propsGrade 
           {selectedGroupName && selectedGrade && (
             <div className="flex flex-col flex-1 bg-[#f6f5fb]">
               <div className="bg-[#ffffff] text-[#5443c3] text-2xl p-4 flex gap-2">
+                <span><IoArrowBack /></span>
                 <h1>{selectedGroupName}</h1>
                 <p>(Grade: {selectedGrade})</p>
               </div>
@@ -161,7 +163,7 @@ const Message = ({ selectedGroupName: propsGroupName, selectedGrade: propsGrade 
                       <p className="text-sm">
                         {/* {msg.message} */}
                       </p>
-                      <p className="text-sm text-black">{msg.message}</p>
+                      <p className="text-sm">{msg.message}</p>
                       {msg.Document && (
                   <div className='text-8xl my-2'>
                     <a href={msg.Document} download target="_blank" rel="noopener noreferrer">

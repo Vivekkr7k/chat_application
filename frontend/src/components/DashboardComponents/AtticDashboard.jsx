@@ -4,7 +4,7 @@ import Sidebar from '../admin/Sidebar';
 import back19 from '../../assests/back19.png'
 import back15 from '../../assests/back15.png'
 import back13 from '../../assests/back13.png'
-import wave3 from '../../assests/wave3.svg'
+
 
 const data = {
   labels: ['Desktop', 'Mobile', 'Tablet'],
@@ -67,19 +67,19 @@ const totalBranches=uniqueBranches.size
     >
       <Sidebar />
       <div className="flex-1 p-6 bg-opacity-75 bg-white relative ">
-        <div className="lg:text-4xl  md:text-2xl text-2xl font-bold  text-white w-full lg:h-56 h-48 lg:pt-10 pl-5 pt-3 "  style={{ backgroundImage: `url(${wave3})`,   backgroundRepeat: 'no-repeat', backgroundSize: 'cover'  }}>
+        <div className="lg:text-4xl md:text-2xl text-4xl font-bold bg-[#5443c3] h-auto text-white w-full lg:h-24  mb-5 py-5 pl-5 flex flex-col items-left justify-start"  >
           Attic's Chat-up Dashboard</div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
           <div className="p-4 rounded-lg shadow-lg" style={{ backgroundImage: `url(${back15})` }}>
-            <div className="text-xl font-bold text-white">No of Registered Employees</div>
+            <div className="lg:text-xl text-lg font-bold text-white">No of Registered Employees</div>
             <div className="text-2xl text-white">{employee.length}</div>
           </div>
           <div className="p-4 rounded-lg shadow-lg" style={{ backgroundImage: `url(${back19})` }}>
-            <div className="text-xl font-bold text-white">No of Registered Branch Managers</div>
+            <div className="lg:text-xl text-lg font-bold text-white">No of Registered Branch Managers</div> 
             <div className="text-2xl text-white">{manager.length}</div>
           </div>
           <div className="p-4 rounded-lg shadow-lg" style={{ backgroundImage: `url(${back13})` }}>
-            <div className="text-xl font-bold text-white">No of Branches</div>
+            <div className="lg:text-xl text-lg font-bold text-white">No of Branches</div>
             <div className="text-2xl text-white">{totalBranches}</div>
           </div>
         </div>

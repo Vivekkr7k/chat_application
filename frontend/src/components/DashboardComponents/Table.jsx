@@ -5,7 +5,8 @@ const Table = () => {
   const [manager, setManager] = useState([]);
   const [selectedManager, setSelectedManager] = useState(null);
   const [location, setLocation] = useState([]);
-  // console.log(location)
+  const [showMap, setShowMap] = useState(false); // State to control the visibility of the map
+
   useEffect(() => {
     const fetchAllManagers = async () => {
       try {
@@ -31,6 +32,7 @@ const Table = () => {
         const data = await response.json();
         setLocation(data.location);
         setSelectedManager(id); // Set the selected manager ID
+        setShowMap(true); // Show the map when a location is clicked
       } else {
         console.error('Failed to fetch location');
         setLocation(null);
@@ -41,11 +43,9 @@ const Table = () => {
     }
   };
 
-  // console.log(location[0].locations)
-
   return (
-    <div className='flex w-full '>
-      <div className="p-4 rounded-lg shadow-lg overflow-auto border border-purple-900 w-1/2">
+    <div className='flex flex-wrap w-full'>
+      <div className="p-4 rounded-lg shadow-lg overflow-auto border border-purple-900 w-full lg:w-1/2">
         <div className="text-xl font-bold mb-4 text-[#5443c3]">Branch Manager Details</div>
         <table className="min-w-full bg-white border">
           <thead>
@@ -88,8 +88,10 @@ const Table = () => {
           </tbody>
         </table>
       </div>
-      {location.length >=1 && (
-        <GoogleMapComponent locations={location[0]?.locations} className="w-1/2"/>
+      {showMap && location.length >= 1 && (
+        <div className="w-full lg:w-1/2 p-4">
+          <GoogleMapComponent locations={location[0]?.locations} onClose={() => setShowMap(false)} className="w-full"/>
+        </div>
       )}
     </div>
   );

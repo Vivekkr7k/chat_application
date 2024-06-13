@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import Message from './Message';
 import { RiDeleteBinLine } from "react-icons/ri";
 import axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const GroupsList = () => {
   const [groups, setGroups] = useState([]);
@@ -13,6 +15,8 @@ const GroupsList = () => {
   const [grade, setGrade] = useState("A");
   const [unreadMessages, setUnreadMessages] = useState([]);
   const [showMessages, setShowMessages] = useState({});
+  const [showConfirmation, setShowConfirmation] = useState(false);
+  const [groupToDelete, setGroupToDelete] = useState(null);
 
   const navigate = useNavigate();
 
@@ -77,6 +81,7 @@ const GroupsList = () => {
           setGroups([...groups, { group: newGroupName, grade }]);
           setShowModal(false);
           setNewGroupName("");
+          toast.success('Group added successfully!');
         } else {
           console.error('Failed to create group');
         }
@@ -86,27 +91,39 @@ const GroupsList = () => {
     }
   };
 
-  const handleDeleteGroup = async (groupName, groupGrade) => {
-    try {
-      const response = await fetch(`http://localhost:5001/api/groups/${groupName}/${groupGrade}`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+  const handleShowDeleteConfirmation = (group) => {
+    setGroupToDelete(group);
+    setShowConfirmation(true);
+  };
 
-      if (response.ok) {
-        const result = await response.json();
-        console.log(result.message);
+  const handleConfirmDelete = async () => {
+    if (groupToDelete) {
+      try {
+        const { group, grade } = groupToDelete;
+        const response = await fetch(`http://localhost:5001/api/groups/${group}/${grade}`, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
 
-        setGroups(groups.filter(group => !(group.group === groupName && group.grade === groupGrade)));
-        setSelectedGroupName("");
-        setSelectedGrade("");
-      } else {
-        console.error('Failed to delete group');
+        if (response.ok) {
+          const result = await response.json();
+          console.log(result.message);
+
+          setGroups(groups.filter(g => !(g.group === group && g.grade === grade)));
+          setSelectedGroupName("");
+          setSelectedGrade("");
+          toast.success('Group deleted successfully!');
+        } else {
+          console.error('Failed to delete group');
+        }
+      } catch (error) {
+        console.error('Error:', error);
+      } finally {
+        setShowConfirmation(false);
+        setGroupToDelete(null);
       }
-    } catch (error) {
-      console.error('Error:', error);
     }
   };
 
@@ -145,6 +162,7 @@ const GroupsList = () => {
 
   return (
     <div className="flex flex-col lg:flex-row h-screen">
+      <ToastContainer />
       <div className="flex flex-col w-full lg:w-[24vw] bg-[#ffffff] text-[#5443c3] border shadow shadow-blue-500/65">
         <div className="p-4 flex justify-between items-center">
           <h1 className="text-2xl lg:text-3xl font-bold">Groups</h1>
@@ -193,7 +211,7 @@ const GroupsList = () => {
                 className="text-red-400 hover:text-red-600 text-2xl"
                 onClick={(e) => {
                   e.stopPropagation();
-                  handleDeleteGroup(group.group, group.grade);
+                  handleShowDeleteConfirmation(group);
                 }}
               >
                 <RiDeleteBinLine />
@@ -239,6 +257,29 @@ const GroupsList = () => {
               <button 
                 className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded"
                 onClick={handleCloseModal}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showConfirmation && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-4 lg:p-8 rounded-lg w-11/12 lg:w-auto">
+            <h2 className="text-2xl font-bold mb-4 text-[#5443c3]">Confirm Delete</h2>
+            <p className="mb-4">Are you sure you want to delete this group?</p>
+            <div className="flex justify-end">
+              <button 
+                className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mr-2"
+                onClick={handleConfirmDelete}
+              >
+                Delete
+              </button>
+              <button 
+                className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded"
+                onClick={() => setShowConfirmation(false)}
               >
                 Cancel
               </button>

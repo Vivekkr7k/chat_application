@@ -1,34 +1,28 @@
-import React ,{useState}from 'react';
+import React, { useState } from 'react';
 import { CgProfile } from "react-icons/cg";
 import { BsChatSquareDots } from "react-icons/bs";
 import { MdGroups } from "react-icons/md";
 import { RiContactsLine } from "react-icons/ri";
 import { BiLogOut } from "react-icons/bi";
-import logo from "../../assests/logo.png";
+import logo from '../../assests/logo.png'
 import { SiLivechat } from "react-icons/si";
 import { Link, useNavigate } from 'react-router-dom';
 import { GrChatOption } from "react-icons/gr";
 import { MdDashboard } from "react-icons/md";
-
+import { FcManager } from "react-icons/fc";
+import { RiBillLine } from "react-icons/ri";
+import { GiPerson } from "react-icons/gi";
+import { FcBusinessman } from "react-icons/fc";
+import { FcSurvey } from "react-icons/fc";
 
 const Sidebar = () => {
   const navigate = useNavigate();
   const [showEmployeeOptions, setShowEmployeeOptions] = useState(false);
-  const handleGroup = () => {
-    navigate("/Groups");
-  };
+  const [activeRoute, setActiveRoute] = useState('/atticDashboard'); // Default active route
 
-  
-  const handleDashboard = () => {
-    navigate("/atticDashboard");
-  };
-
-  const handleChat = () => {
-    navigate("/chat");
-  };
-
-  const handleEmployeeRegister = () => {
-    navigate("/register");
+  const handleNavigation = (route) => {
+    setActiveRoute(route);
+    navigate(route);
   };
 
   const handleLogout = () => {
@@ -36,85 +30,86 @@ const Sidebar = () => {
     localStorage.clear();
   };
 
-  const handleLiveChat = () => {
-    navigate("/livemesages");
-  };
-
-  const handleBillingTeamRegister = () => {
-    navigate("/billingTeamRegister");
-  };
-
-  const handleManagerRegister = () => {
-    navigate("/managerRegister")
-  }
-
+  const employeeRoutes = ['/register', '/billingTeamRegister', '/managerRegister'];
 
   return (
-    <div className='flex flex-row lg:flex-col h-[80px] lg:h-screen w-full lg:w-[100px] left-0 bg-[#5443c3] border-b lg:border-r shadow-md justify-between items-center py-[10px] lg:py-[20px] text-gray-500 text-2xl md:text-3xl'>
-      <div className="w-16 md:w-24 lg:w-24 h-16 md:h-20 lg:h-24 mx-3 bg-[#fffefd] rounded-2xl flex items-center justify-center">
-        <img className="m-2 md:m-4 lg:m-10" src={logo} alt="Logo" />
+    <div className='flex flex-row lg:flex-col h-[80px] lg:h-screen w-full lg:w-[100px] left-0 bg-[#5443c3] border-b lg:border-r shadow-md justify-between items-center py-[10px] lg:py-[20px] text-gray-500'>
+      <div className="w-16 md:w-20 lg:w-24 h-12 md:h-16 lg:h-20 mx-3 bg-[#fffefd] rounded-2xl flex items-center justify-center">
+        <img className="m-2 md:m-4 lg:m-6" src={logo} alt="Logo" />
       </div>
       
-      <div className="flex flex-row lg:flex-col gap-[10px] sm:gap-[10px] md:gap-[10px] lg:gap-[40px] relative">
-        <div onClick={handleDashboard} className="group relative flex items-center bg-[#fffefd] rounded-full p-3 md:p-5">
-        <MdDashboard />
-          <span className="absolute bottom-full lg:bottom-auto lg:left-full ml-2 lg:ml-0 lg:mt-2 whitespace-nowrap bg-white text-black text-xs md:text-sm rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+      <div className="flex flex-row lg:flex-col gap-2 md:gap-3 lg:gap-5 relative">
+        <div
+          onClick={() => handleNavigation('/atticDashboard')}
+          className={`group relative flex items-center rounded-full p-2 md:p-4 lg:p-5 cursor-pointer ${activeRoute === '/atticDashboard' ? 'bg-blue-500 text-white' : 'bg-[#fffefd]'}`}
+        >
+          <MdDashboard className="text-lg md:text-2xl lg:text-3xl" />
+          <span className="absolute bottom-full lg:bottom-auto lg:left-full ml-2 lg:ml-0 lg:mt-2 whitespace-nowrap bg-black text-white text-xs md:text-sm rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
             Dashboard
           </span>
         </div>
-        <div onClick={handleGroup} className="group relative flex items-center bg-[#fffefd] rounded-full p-3 md:p-5">
-        <GrChatOption />
-          <span className="absolute bottom-full lg:bottom-auto lg:left-full ml-2 lg:ml-0 lg:mt-2 whitespace-nowrap bg-white text-black text-xs md:text-sm rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+
+        <div
+          onClick={() => handleNavigation('/Groups')}
+          className={`group relative flex items-center rounded-full p-2 md:p-4 lg:p-5 cursor-pointer ${activeRoute === '/Groups' ? 'bg-blue-500 text-white' : 'bg-[#fffefd]'}`}
+        >
+          <GrChatOption className="text-lg md:text-2xl lg:text-3xl" />
+          <span className="absolute bottom-full lg:bottom-auto lg:left-full ml-2 lg:ml-0 lg:mt-2 whitespace-nowrap bg-black text-white text-xs md:text-sm rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
             Group Chat
           </span>
         </div>
+
         <div
           onMouseEnter={() => setShowEmployeeOptions(true)}
           onMouseLeave={() => setShowEmployeeOptions(false)}
-          className="group relative flex items-center bg-[#fffefd] rounded-full p-3 md:p-5 cursor-pointer">
-          <MdGroups />
-          <span className="absolute bottom-full lg:bottom-auto lg:left-full ml-2 lg:ml-0 lg:mt-2 whitespace-nowrap bg-white text-black text-xs md:text-sm rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                style={{ display: showEmployeeOptions ? 'block' : 'none' }}>
-            <div onClick={handleEmployeeRegister} className="cursor-pointer">Employee Registration</div>
-            <div onClick={handleBillingTeamRegister} className="cursor-pointer">Billing Team Registration</div>
-            <div onClick={handleManagerRegister} className="cursor-pointer">Manager Registration</div>
+          className={`group relative flex items-center rounded-full p-2 md:p-4 lg:p-5 cursor-pointer ${employeeRoutes.includes(activeRoute) ? 'bg-blue-500 text-white' : 'bg-[#fffefd]'}`}
+        >
+          <MdGroups className="text-lg md:text-2xl lg:text-3xl" />
+          <span className="absolute bottom-full lg:bottom-auto lg:left-full ml-2 lg:ml-0 lg:mt-2 whitespace-nowrap bg-black text-white text-xs md:text-sm rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+            style={{ display: showEmployeeOptions ? 'block' : 'none' }}
+          >
+            <div onClick={() => handleNavigation('/register')} className="flex items-center gap-2 cursor-pointer hover:text-red-500 hover:text-xl">
+              <FcManager className='bg-white rounded-full mr-2'/>
+              <span>Employee Registration</span>
+            </div>
+            <div onClick={() => handleNavigation('/billingTeamRegister')} className="flex items-center gap-2 cursor-pointer hover:text-red-500 hover:text-xl">
+              <FcSurvey className='bg-white rounded-full mr-2'/>
+              <span>Billing Team Registration</span>
+            </div>
+            <div onClick={() => handleNavigation('/managerRegister')} className="flex items-center gap-2 cursor-pointer hover:text-red-500 hover:text-xl">
+              <FcBusinessman className='bg-white rounded-full mr-2'/>
+              <span>Manager Registration</span>
+            </div>
           </span>
         </div>
-        {/* <div onClick={handleChat} className="group relative flex items-center bg-[#fffefd] rounded-full p-3 md:p-5">
-         
-          <span className="absolute bottom-full lg:bottom-auto lg:left-full ml-2 lg:ml-0 lg:mt-2 whitespace-nowrap bg-white text-black text-xs md:text-sm rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            Chat
-          </span>
-        </div> */}
-        {/* <div onClick={handleEmployeeRegister} className="group relative flex items-center bg-[#fffefd] rounded-full p-3 md:p-5">
-          <MdGroups />
-          <span className="absolute bottom-full lg:bottom-auto lg:left-full ml-2 lg:ml-0 lg:mt-2 whitespace-nowrap bg-white text-black text-xs md:text-sm rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            Register Employee
-          </span>
-        </div> */}
-        {/* <div className="group relative flex items-center bg-[#fffefd] rounded-full p-3 md:p-5">
-          <RiContactsLine />
-          <span className="absolute bottom-full lg:bottom-auto lg:left-full ml-2 lg:ml-0 lg:mt-2 whitespace-nowrap bg-white text-black text-xs md:text-sm rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            Contacts
-          </span>
-        </div> */}
-        <div onClick={handleLiveChat} className="group relative flex items-center bg-[#fffefd] rounded-full p-3 md:p-5">
-          <SiLivechat />
-          <span className="absolute bottom-full lg:bottom-auto lg:left-full ml-2 lg:ml-0 lg:mt-2 whitespace-nowrap bg-white text-black text-xs md:text-sm rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+
+        <div
+          onClick={() => handleNavigation('/livemesages')}
+          className={`group relative flex items-center rounded-full p-2 md:p-4 lg:p-5 cursor-pointer ${activeRoute === '/livemesages' ? 'bg-blue-500 text-white' : 'bg-[#fffefd]'}`}
+        >
+          <SiLivechat className="text-lg md:text-2xl lg:text-3xl" />
+          <span className="absolute bottom-full lg:bottom-auto lg:left-full ml-2 lg:ml-0 lg:mt-2 whitespace-nowrap bg-black text-white text-xs md:text-sm rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
             Live Chat
           </span>
         </div>
-        <Link to={"/adminToemp"}  className="group relative flex items-center bg-[#fffefd] rounded-full p-3 md:p-5">
-        <BsChatSquareDots />
-          <span className="absolute bottom-full lg:bottom-auto lg:left-full ml-2 lg:ml-0 lg:mt-2 whitespace-nowrap bg-white text-black text-xs md:text-sm rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+
+        <Link
+          to="/adminToemp"
+          className={`group relative flex items-center rounded-full p-2 md:p-4 lg:p-5 cursor-pointer ${activeRoute === '/adminToemp' ? 'bg-blue-500 text-white' : 'bg-[#fffefd]'}`}
+        >
+          <BsChatSquareDots className="text-lg md:text-2xl lg:text-3xl" />
+          <span className="absolute bottom-full lg:bottom-auto lg:left-full ml-2 lg:ml-0 lg:mt-2 whitespace-nowrap bg-black text-white text-xs md:text-sm rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
             Employee
           </span>
         </Link>
       </div>
-      
-      <div onClick={handleLogout} className="group relative flex items-center bg-[#fffefd] rounded-full p-3 md:p-5 ">
-        <BiLogOut />
-        <span className="absolute bottom-full lg:bottom-auto lg:left-full ml-2 lg:ml-0 lg:mt-2 whitespace-nowrap bg-white text-black text-xs md:text-sm rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+
+      <div
+        onClick={handleLogout}
+        className="group relative flex items-center bg-[#fffefd] rounded-full p-2 md:p-4 lg:p-5 cursor-pointer"
+      >
+        <BiLogOut className="text-lg md:text-2xl lg:text-3xl" />
+        <span className="absolute bottom-full lg:bottom-auto lg:left-full ml-2 lg:ml-0 lg:mt-2 whitespace-nowrap bg-black text-white text-xs md:text-sm rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
           Logout
         </span>
       </div>
