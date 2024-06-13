@@ -6,6 +6,8 @@ import { Link } from "react-router-dom";
 import { IoIosDocument } from "react-icons/io";
 import FileUploadModel from "../employee/FileUploadModel";
 import { io } from "socket.io-client";
+import { FaVideo } from "react-icons/fa";
+import { FaImage } from "react-icons/fa";
 function BillingTeamChat() {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
@@ -180,13 +182,32 @@ function BillingTeamChat() {
                       onClick={() => handleShowMessage(user._id)}
                     >
                       {!showMessages[user._id] ? (
-                        <>
-                          <p className="pe-2 text-xs">{message.content.text}</p>
-                          <p className="text-xs text-black">
-                            {new Date(message.createdAt).toLocaleDateString()}{" "}
-                            {new Date(message.createdAt).toLocaleTimeString()}
-                          </p>
-                        </>
+                       <>
+                       {
+                         message.content.text && (
+                           <p className="pe-2 text-base">{message.content.text}</p>
+                         )
+                       }
+                       {
+                         message.content.image && (
+                           <FaImage />
+                         )
+                       }
+                       {
+                         message.content.video && (
+                           <FaVideo />
+                         )
+                       }
+                       {
+                         message.content.document && (
+                           <IoIosDocument className="text-xl" />
+                         )
+                       }
+                       <p className="text-xs text-black">
+                         {new Date(message.createdAt).toLocaleDateString()}{" "}
+                         {new Date(message.createdAt).toLocaleTimeString()}
+                       </p>
+                     </>
                       ) : (
                         <p></p>
                       )}

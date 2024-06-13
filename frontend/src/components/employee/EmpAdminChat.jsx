@@ -5,6 +5,8 @@ import FileUploadModel from "./FileUploadModel";
 import { BiLogOut } from "react-icons/bi";
 import { Link } from "react-router-dom";
 import { IoIosDocument } from "react-icons/io";
+import { FaVideo } from "react-icons/fa";
+import { FaImage } from "react-icons/fa";
 
 function EmpAdminChat() {
   const [messages, setMessages] = useState([]);
@@ -188,13 +190,32 @@ function EmpAdminChat() {
                         onClick={() => handleShowMessage(admin._id)}
                       >
                         {!showMessages[admin._id] ? (
-                          <>
-                            <p className="pe-2 text-base">{message.content.text}</p>
-                            <p className="text-xs text-black">
-                              {new Date(message.createdAt).toLocaleDateString()}{"     "}
-                              {new Date(message.createdAt).toLocaleTimeString()}
-                            </p>
-                          </>
+                           <>
+                           {
+                             message.content.text && (
+                               <p className="pe-2 text-base">{message.content.text}</p>
+                             )
+                           }
+                           {
+                             message.content.image && (
+                               <FaImage />
+                             )
+                           }
+                           {
+                             message.content.video && (
+                               <FaVideo />
+                             )
+                           }
+                           {
+                             message.content.document && (
+                               <IoIosDocument className="text-xl" />
+                             )
+                           }
+                           <p className="text-xs text-black">
+                             {new Date(message.createdAt).toLocaleDateString()}{" "}
+                             {new Date(message.createdAt).toLocaleTimeString()}
+                           </p>
+                         </>
                         ) : (
                           <p></p>
                         )}

@@ -5,6 +5,8 @@ import { BiLogOut } from "react-icons/bi";
 import { Link } from "react-router-dom";
 import { IoIosDocument } from "react-icons/io";
 import AdminFileUploadModel from "./Pages/AdminFileUploadModel";
+import { FaVideo } from "react-icons/fa";
+import { FaImage } from "react-icons/fa";
 
 function AdminEmpChat() {
   const [messages, setMessages] = useState([]);
@@ -21,6 +23,7 @@ function AdminEmpChat() {
   const [unreadUsers, setUnreadUsers] = useState([]);
   const [unreadUsersAdmin, setUnreadUsersAdmin] = useState([]);
   const [showMessages, setShowMessages] = useState({});
+
 
   const handleClick = (id, name) => {
     setRecipient(id);
@@ -213,17 +216,36 @@ function AdminEmpChat() {
                     unreadUser.data.map((message) => (
                       <div
                         key={message._id}
-                        className="text-green-400 flex justify-between items-center content-center gap-5"
+                        className="text-green-400 flex justify-between items-center mt-2 content-center gap-5"
                         onClick={() => handleShowMessage(admin._id)}
                       >
                         {!showMessages[admin._id] ? (
                           <>
-                            <p className="pe-2 text-base">{message.content.text}</p>
-                            <p className="text-xs text-black">
-                              {new Date(message.createdAt).toLocaleDateString()}{" "}
-                              {new Date(message.createdAt).toLocaleTimeString()}
-                            </p>
-                          </>
+                          {
+                            message.content.text && (
+                              <p className="pe-2 text-base">{message.content.text}</p>
+                            )
+                          }
+                          {
+                            message.content.image && (
+                              <FaImage />
+                            )
+                          }
+                          {
+                            message.content.video && (
+                              <FaVideo />
+                            )
+                          }
+                          {
+                            message.content.document && (
+                              <IoIosDocument className="text-xl" />
+                            )
+                          }
+                          <p className="text-xs text-black">
+                            {new Date(message.createdAt).toLocaleDateString()}{" "}
+                            {new Date(message.createdAt).toLocaleTimeString()}
+                          </p>
+                        </>
                         ) : (
                           <p></p>
                         )}
@@ -260,12 +282,31 @@ function AdminEmpChat() {
                     unreadUser.data.map((message) => (
                       <div
                         key={message._id}
-                        className="text-green-400 flex justify-between items-center content-center gap-5"
+                        className="text-green-400 flex justify-between items-center content-center gap-5 mt-2"
                         onClick={() => handleShowMessage(user._id)}
                       >
                         {!showMessages[user._id] ? (
                           <>
-                            <p className="pe-2 text-base">{message.content.text}</p>
+                            {
+                              message.content.text && (
+                                <p className="pe-2 text-base">{message.content.text}</p>
+                              )
+                            }
+                            {
+                              message.content.image && (
+                                <FaImage />
+                              )
+                            }
+                            {
+                              message.content.video && (
+                                <FaVideo />
+                              )
+                            }
+                            {
+                              message.content.document && (
+                                <IoIosDocument className="text-xl" />
+                              )
+                            }
                             <p className="text-xs text-black">
                               {new Date(message.createdAt).toLocaleDateString()}{" "}
                               {new Date(message.createdAt).toLocaleTimeString()}
